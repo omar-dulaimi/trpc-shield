@@ -33,15 +33,16 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
     let rule: ShieldRule<TContext> | undefined;
     if (keys.includes('query') || keys.includes('mutation')) {
       //@ts-ignore
-      rule = ruleTree?.[type]?.[opName] || options.fallbackRule;
+      rule = ruleTree?.[type]?.[opName];
     } else {
       const namespace = opWithPath[0];
 
       const tree = (ruleTree as Record<string, any>)[namespace];
       if (tree?.[type]?.[opName]) {
-        rule = tree?.[type]?.[opName] || options.fallbackRule;
+        rule = tree?.[type]?.[opName];
       }
     }
+    rule = rule || options.fallbackRule;
 
     if (rule) {
       return rule?.resolve(ctx, type, path, input, rawInput, options).then((result) => {

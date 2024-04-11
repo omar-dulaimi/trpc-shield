@@ -1,6 +1,6 @@
 {
   "name": "trpc-shield",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "tRPC permissions as another layer of abstraction!",
   "repository": "https://github.com/omar-dulaimi/trpc-shield",
   "main": "lib/index.js",

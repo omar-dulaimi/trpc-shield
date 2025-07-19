@@ -1,348 +1,529 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+# tRPC Shield
 
-<!-- PROJECT LOGO -->
-<br />
+[![NPM Version](https://img.shields.io/npm/v/trpc-shield?style=for-the-badge&logo=npm&color=blue)](https://www.npmjs.com/package/trpc-shield)
+[![NPM Downloads](https://img.shields.io/npm/dm/trpc-shield?style=for-the-badge&logo=npm&color=green)](https://www.npmjs.com/package/trpc-shield)
+[![GitHub Stars](https://img.shields.io/github/stars/omar-dulaimi/trpc-shield?style=for-the-badge&logo=github&color=yellow)](https://github.com/omar-dulaimi/trpc-shield/stargazers)
+[![License](https://img.shields.io/github/license/omar-dulaimi/trpc-shield?style=for-the-badge&color=purple)](https://github.com/omar-dulaimi/trpc-shield/blob/master/LICENSE)
+[![Test Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen?style=for-the-badge)](https://github.com/omar-dulaimi/trpc-shield)
+
 <div align="center">
-  <a href="https://github.com/omar-dulaimi/trpc-shield">
-    <img src="media/shield.png" alt="Logo" width="150">
-  </a>
-
-  <h3 align="center">tRPC Shield</h3>
-
+  <img src="media/shield.png" alt="tRPC Shield Logo" width="200">
+  
+  <h3 align="center">🛡️ tRPC Shield</h3>
   <p align="center">
-    tRPC permissions as another layer of abstraction!s!
-    <br />
-    <a href="https://github.com/omar-dulaimi/trpc-shield"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/omar-dulaimi/trpc-shield/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/omar-dulaimi/trpc-shield/issues">Request Feature</a>
+    <strong>Powerful permission layer for tRPC applications</strong><br>
+    Create secure, type-safe APIs with intuitive rule-based authorization
+  </p>
+  
+  <p align="center">
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="#-documentation">Documentation</a> •
+    <a href="#-examples">Examples</a> •
+    <a href="#-contributing">Contributing</a>
   </p>
 </div>
 
+## ✨ Features
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#overview">Overview</a>
-    </li>
-    <li>
-      <a href="#supported-trpc-versions">Supported tRPC Versions</a>
-    </li>
-    <li>
-      <a href="#installation">Installation</a>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#documentation">Documentation</a></li>
-    <li><a href="#contributors">Contributors</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+- 🔒 **Rule-based permissions** - Define authorization logic with intuitive, composable rules
+- 🚀 **tRPC v11 support** - Full compatibility with the latest tRPC features
+- 🔄 **Context extension** - Rules can extend context with authentication data
+- 🧩 **Logic operators** - Combine rules with `and`, `or`, `not`, `chain`, and `race`
+- 🛡️ **Secure by default** - Prevents data leaks with fallback rules
+- 📝 **TypeScript first** - Full type safety and IntelliSense support
+- 🎯 **Zero dependencies** - Lightweight and fast
+- 🧪 **Well tested** - 94%+ test coverage
 
-## Overview
+## 🚀 Quick Start
 
-tRPC Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request. This way you can make sure no internal data will be exposed.
+### Installation
 
-<!-- GETTING STARTED -->
-## Supported tRPC Versions
-
-### tRPC 11
-
-- 0.5.0 and higher
-
-### tRPC 10
-
-- 0.2.0 to 0.4.x
-
-### tRPC 9
-
-- 0.1.2 and lower
-
-
-## Installation
-
-#### Using npm
-
-```sh
+```bash
+# npm
 npm install trpc-shield
-```
 
-#### Using yarn
-
-```sh
+# yarn
 yarn add trpc-shield
+
+# pnpm
+pnpm add trpc-shield
 ```
 
-## Usage
+### Basic Example
 
-- Don't forget to star this repo 😉
-
-```ts
-import * as trpc from '@trpc/server';
+```typescript
+import { initTRPC } from '@trpc/server';
 import { rule, shield, and, or, not } from 'trpc-shield';
-import { Context } from '../../src/context';
 
-// Rules
+type Context = {
+  user?: { id: string; role: string; name: string };
+  token?: string;
+};
 
-const isAuthenticated = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user !== null
-})
-
-const isAdmin = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user.role === 'admin'
-})
-
-const isEditor = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user.role === 'editor'
-})
-
-// Permissions
-
-const permissions = shield<Context>({
-  query: {
-    frontPage: not(isAuthenticated),
-    fruits: and(isAuthenticated, or(isAdmin, isEditor)),
-    customers: and(isAuthenticated, isAdmin),
-  },
-  mutation: {
-    addFruitToBasket: isAuthenticated,
-  },
-});
-
-export const t = trpc.initTRPC.context<Context>().create();
-
-export const permissionsMiddleware = t.middleware(permissions);
-
-export const shieldedProcedure = t.procedure.use(permissionsMiddleware);
-
-```
-For a fully working example, [go here](https://github.com/omar-dulaimi/trpc-shield/tree/master/example).
-## Documentation
-
-### Namespaced routers
-
-```ts
-export const permissions = shield<Context>({
-  user: {
-    query: {
-      aggregateUser: allow,
-      findFirstUser: allow,
-      findManyUser: isAuthenticated,
-      findUniqueUser: allow,
-      groupByUser: allow,
-    },
-    mutation: {
-      createOneUser: isAuthenticated,
-      deleteManyUser: allow,
-      deleteOneUser: allow,
-      updateManyUser: allow,
-      updateOneUser: allow,
-      upsertOneUser: allow,
-    },
-  },
-});
-```
-
-### Context Extension
-
-tRPC Shield supports context extension, similar to tRPC middleware. Rules can extend the context by returning an object with a `ctx` property:
-
-```ts
-const isAuthenticated = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  if (!ctx.user && ctx.token) {
-    // Validate token and get user information
-    const user = await validateToken(ctx.token);
-    
-    if (user) {
-      // Extend context with user information
-      return { ctx: { user } };
-    }
-    
-    return new Error('Invalid token');
-  }
-  
+// Create rules
+const isAuthenticated = rule<Context>()(async (ctx) => {
   return ctx.user !== null;
 });
 
-// Usage in tRPC procedure
-const protectedProcedure = t.procedure
-  .use(shield({ query: { profile: isAuthenticated } }))
+const isAdmin = rule<Context>()(async (ctx) => {
+  return ctx.user?.role === 'admin';
+});
+
+// Create permissions
+const permissions = shield<Context>({
+  query: {
+    publicData: true, // Always allow
+    profile: isAuthenticated,
+    adminData: and(isAuthenticated, isAdmin),
+  },
+  mutation: {
+    updateProfile: isAuthenticated,
+    deleteUser: and(isAuthenticated, isAdmin),
+  },
+});
+
+// Apply to tRPC
+const t = initTRPC.context<Context>().create();
+const middleware = t.middleware(permissions);
+const protectedProcedure = t.procedure.use(middleware);
+```
+
+## 📋 Version Compatibility
+
+| tRPC Version | Shield Version | Status |
+|--------------|----------------|---------|
+| **v11.x** | **v1.0.0+** | ✅ **Recommended** |
+| v10.x | v0.2.0 - v0.4.x | ⚠️ Legacy |
+| v9.x | v0.1.2 and below | ❌ Deprecated |
+
+### 🆕 What's New in v1.0.0
+
+- **tRPC v11 Support** - Full compatibility with latest tRPC features
+- **Context Extension** - Rules can now extend context (see [Context Extension](#-context-extension))
+- **Improved TypeScript** - Better type inference and safety
+- **Performance Optimizations** - Faster rule evaluation
+- **Enhanced Testing** - 94%+ test coverage
+
+## 🔧 Core Concepts
+
+### Rules
+
+Rules are the building blocks of your permission system. Each rule is an async function that returns:
+- `true` - Allow access
+- `false` - Deny access
+- `Error` - Deny with custom error
+- `{ ctx: {...} }` - Allow and extend context
+
+```typescript
+const isOwner = rule<Context>()(async (ctx, type, path, input) => {
+  const resourceId = input.id;
+  const resource = await getResource(resourceId);
+  
+  if (resource.ownerId !== ctx.user?.id) {
+    return new Error('You can only access your own resources');
+  }
+  
+  return true;
+});
+```
+
+### Logic Operators
+
+Combine rules with powerful logic operators:
+
+```typescript
+const permissions = shield<Context>({
+  query: {
+    // All rules must pass
+    sensitiveData: and(isAuthenticated, isAdmin, isEmailVerified),
+    
+    // At least one rule must pass
+    moderatedContent: or(isAdmin, isModerator),
+    
+    // Rule must fail
+    publicEndpoint: not(isInternalRequest),
+    
+    // Execute rules in sequence until one passes
+    content: race(isOwner, isCollaborator, isPublicAccess),
+    
+    // Execute rules in sequence, all must pass
+    secureAction: chain(isAuthenticated, isEmailVerified, hasPermission),
+  },
+});
+```
+
+## 🔄 Context Extension
+
+> **New in v1.0.0** - Rules can extend the tRPC context
+
+Rules can return an object with a `ctx` property to extend the context for subsequent middleware and procedures:
+
+```typescript
+const withAuth = rule<Context>()(async (ctx) => {
+  // If user is already in context, just validate
+  if (ctx.user) {
+    return true;
+  }
+  
+  // If we have a token, validate and extend context
+  if (ctx.token) {
+    try {
+      const user = await validateToken(ctx.token);
+      // Extend context with user data
+      return { ctx: { user } };
+    } catch {
+      return new Error('Invalid token');
+    }
+  }
+  
+  return false;
+});
+
+// Usage
+const authenticatedProcedure = t.procedure
+  .use(shield({ query: { profile: withAuth } }))
   .query(({ ctx }) => {
-    // ctx.user is now available and properly typed
-    return `Welcome ${ctx.user.name}!`;
+    // ctx.user is now available and properly typed!
+    return { message: `Hello ${ctx.user.name}!` };
   });
 ```
 
-This enables seamless authentication flows where rules can both authorize requests and extend the context with authentication information.
+## 📚 Advanced Usage
 
-### API
-#### `shield(rules?, options?)`
+### Namespaced Routers
 
-> Generates tRPC Middleware layer from your rules.
+Organize permissions for complex router structures:
 
-#### `rules`
-
-All rules must be created using the `rule` function.
-
-##### Limitations
-
-- All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
-
-```jsx
-// Normal
-const admin = rule<Context>()(async (ctx, type, path, input, rawInput) => true)
-
-// With external data
-const admin = (bool) => rule<Context>(`name-${bool}`)(async (ctx, type, path, input, rawInput) => bool)
+```typescript
+const permissions = shield<Context>({
+  // Nested router permissions
+  user: {
+    query: {
+      profile: isAuthenticated,
+      list: and(isAuthenticated, isAdmin),
+    },
+    mutation: {
+      update: isOwner,
+      delete: and(isAuthenticated, or(isOwner, isAdmin)),
+    },
+  },
+  
+  // Another namespace
+  posts: {
+    query: {
+      public: true,
+      drafts: isOwner,
+    },
+    mutation: {
+      create: isAuthenticated,
+      publish: and(isOwner, hasPublishPermission),
+    },
+  },
+});
 ```
 
-#### `options`
+### Configuration Options
 
-| Property            | Required | Default                  | Description                                        |
-| ------------------- | -------- | ------------------------ | -------------------------------------------------- |
-| allowExternalErrors | false    | false                    | Toggle catching internal errors.                   |
-| debug               | false    | false                    | Toggle debug mode.                                 |
-| fallbackRule        | false    | allow                    | The default rule for every "rule-undefined" field. |
-| fallbackError       | false    | Error('Not Authorised!') | Error Permission system fallbacks to.              |
+Customize shield behavior:
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
+```typescript
+const permissions = shield<Context>(
+  {
+    query: {
+      data: isAuthenticated,
+    },
+  },
+  {
+    // Allow external errors to be thrown (default: false)
+    allowExternalErrors: true,
+    
+    // Enable debug mode for development
+    debug: process.env.NODE_ENV === 'development',
+    
+    // Default rule for undefined paths (default: allow)
+    fallbackRule: deny,
+    
+    // Custom error message or Error instance
+    fallbackError: 'Access denied',
+    // or
+    fallbackError: new CustomError('Insufficient permissions'),
+  }
+);
+```
 
-### Basic rules
+### Error Handling
 
-> `allow`, `deny` are tRPC Shield predefined rules.
+```typescript
+const permissions = shield<Context>({
+  mutation: {
+    deletePost: rule<Context>()(async (ctx, type, path, input) => {
+      const post = await getPost(input.id);
+      
+      if (!post) {
+        return new Error('Post not found');
+      }
+      
+      if (post.authorId !== ctx.user?.id && ctx.user?.role !== 'admin') {
+        return new Error('You can only delete your own posts');
+      }
+      
+      return true;
+    }),
+  },
+});
+```
 
-`allow` and `deny` rules do exactly what their names describe.
+## 🎯 Examples
 
-### Logic Rules
+### Complete Authentication Flow
 
-#### `and`, `or`, `not`, `chain`, `race`
+```typescript
+import { initTRPC, TRPCError } from '@trpc/server';
+import { shield, rule, and, or, not } from 'trpc-shield';
+import jwt from 'jsonwebtoken';
 
-> `and`, `or` and `not` allow you to nest rules in logic operations.
+type User = {
+  id: string;
+  email: string;
+  role: 'user' | 'admin' | 'moderator';
+  emailVerified: boolean;
+};
 
-##### `and` rule
+type Context = {
+  user?: User;
+  token?: string;
+};
 
-`and` rule allows access only if all sub rules used return `true`.
+// Authentication rule with context extension
+const authenticate = rule<Context>()(async (ctx) => {
+  if (ctx.user) return true;
+  
+  if (!ctx.token) {
+    return new Error('Authentication required');
+  }
+  
+  try {
+    const payload = jwt.verify(ctx.token, process.env.JWT_SECRET!) as any;
+    const user = await getUserById(payload.userId);
+    
+    if (!user) {
+      return new Error('User not found');
+    }
+    
+    // Extend context with user
+    return { ctx: { user } };
+  } catch {
+    return new Error('Invalid token');
+  }
+});
 
-##### `chain` rule
+// Authorization rules
+const isAdmin = rule<Context>()(async (ctx) => ctx.user?.role === 'admin');
+const isModerator = rule<Context>()(async (ctx) => ctx.user?.role === 'moderator');
+const isEmailVerified = rule<Context>()(async (ctx) => ctx.user?.emailVerified === true);
 
-`chain` rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass.
-
-> The left-most rule is executed first.
-
-##### `or` rule
-
-`or` rule allows access if at least one sub rule returns `true` and no rule throws an error.
-
-##### `race` rule
-
-`race` rule allows you to chain the rules so that execution stops once one of them returns `true`.
-
-##### not
-
-`not` works as usual not in code works.
-
-> You may also add a custom error message as the second parameter `not(rule, error)`.
-
-```tsx
-import { shield, rule, and, or } from 'trpc-shield'
-
-const isAdmin = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user.role === 'admin'
-})
-
-const isEditor = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user.role === 'editor'
-})
-
-const isOwner = rule<Context>()(async (ctx, type, path, input, rawInput) => {
-  return ctx.user.role === 'owner'
-})
-
+// Permission definitions
 const permissions = shield<Context>({
   query: {
-    users: or(isAdmin, isEditor),
+    // Public endpoints
+    publicPosts: true,
+    healthCheck: true,
+    
+    // Authenticated endpoints
+    profile: authenticate,
+    notifications: and(authenticate, isEmailVerified),
+    
+    // Admin endpoints
+    userList: and(authenticate, isAdmin),
+    analytics: and(authenticate, or(isAdmin, isModerator)),
   },
+  
   mutation: {
-    createBlogPost: or(isAdmin, and(isOwner, isEditor)),
+    // Public mutations
+    register: not(authenticate), // Only unauthenticated users
+    login: not(authenticate),
+    
+    // Authenticated mutations
+    updateProfile: and(authenticate, isEmailVerified),
+    createPost: authenticate,
+    
+    // Admin mutations
+    deleteUser: and(authenticate, isAdmin),
+    banUser: and(authenticate, or(isAdmin, isModerator)),
   },
-})
+});
+
+// tRPC setup
+const t = initTRPC.context<Context>().create();
+
+export const middleware = t.middleware(permissions);
+export const protectedProcedure = t.procedure.use(middleware);
+
+// Usage in router
+export const appRouter = t.router({
+  profile: protectedProcedure
+    .query(({ ctx }) => {
+      // ctx.user is guaranteed to exist and be typed correctly
+      return {
+        id: ctx.user.id,
+        email: ctx.user.email,
+        role: ctx.user.role,
+      };
+    }),
+    
+  updateProfile: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // User is authenticated and email verified
+      return await updateUser(ctx.user.id, { name: input.name });
+    }),
+});
 ```
 
-### Global Fallback Error
+### Resource-Based Permissions
 
-tRPC Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localization. You can use `string` or even custom `Error` to define it.
+```typescript
+const isResourceOwner = (resourceType: string) => 
+  rule<Context>(`isOwnerOf${resourceType}`)(async (ctx, type, path, input) => {
+    const resource = await getResource(resourceType, input.id);
+    return resource.ownerId === ctx.user?.id;
+  });
 
-```ts
-const permissions = shield<Context>(
-  {
-    query: {
-      items: allow,
-    },
+const permissions = shield<Context>({
+  mutation: {
+    updatePost: and(authenticate, isResourceOwner('post')),
+    deleteComment: and(authenticate, or(
+      isResourceOwner('comment'),
+      isResourceOwner('post'), // Post owner can delete comments
+      isAdmin
+    )),
   },
-  {
-    fallbackError: 'To je napaka!', // meaning "This is a mistake" in Slovene.
-  },
-)
-
-const permissions = shield<Context>(
-  {
-    query: {
-      items: allow,
-    },
-  },
-  {
-    fallbackError: new CustomError('You are something special!'),
-  },
-)
+});
 ```
 
-### Whitelisting vs Blacklisting
+## 🧪 Testing
 
-Shield allows you to lock-in access. This way, you can seamlessly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
+tRPC Shield is extensively tested with 94%+ coverage. Test your rules in isolation:
 
-```ts
-const permissions = shield<Context>(
-  {
-    query: {
-      users: allow,
-    },
-  },
-  { fallbackRule: deny },
-)
+```typescript
+import { describe, it, expect } from 'vitest';
+
+describe('Authentication Rules', () => {
+  it('should allow authenticated users', async () => {
+    const ctx = { user: { id: '1', role: 'user' } };
+    const result = await isAuthenticated.resolve(ctx, 'query', 'profile', {}, {}, {});
+    expect(result).toBe(true);
+  });
+  
+  it('should extend context with user data', async () => {
+    const ctx = { token: 'valid-jwt-token' };
+    const result = await authenticate.resolve(ctx, 'query', 'profile', {}, {}, {});
+    expect(result).toEqual({ ctx: { user: expect.any(Object) } });
+  });
+});
 ```
 
-## Contributors
+## 🔒 Security Best Practices
 
-This project exists thanks to all the people who contribute.
+1. **Use `deny` as fallback** for sensitive applications:
+   ```typescript
+   shield(permissions, { fallbackRule: deny })
+   ```
 
-## Contributing
+2. **Validate input in rules**:
+   ```typescript
+   const isOwner = rule<Context>()(async (ctx, type, path, input) => {
+     if (!input?.id) return new Error('Resource ID required');
+     // ... rest of logic
+   });
+   ```
 
-We are always looking for people to help us grow `trpc-shield`! If you have an issue, feature request, or pull request, let us know!
+3. **Don't expose sensitive errors** in production:
+   ```typescript
+   shield(permissions, { 
+     allowExternalErrors: process.env.NODE_ENV === 'development' 
+   })
+   ```
 
-## Acknowledgments
+4. **Use specific error messages** for better UX:
+   ```typescript
+   const hasPermission = rule<Context>()(async (ctx) => {
+     if (!ctx.user) return new Error('Please log in to continue');
+     if (!ctx.user.emailVerified) return new Error('Please verify your email');
+     return true;
+   });
+   ```
 
-A huge thank you goes to everybody who worked on Graphql Shield, as this project is based on it.
+## 📖 API Reference
 
-Also thanks goes to flaticon, for use of one of their icons in the logo: <a href="https://www.flaticon.com/free-icons/shield" title="shield icons">Shield icons created by Freepik - Flaticon</a>
+### `shield(permissions, options?)`
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+Creates a tRPC middleware from your permission rules.
 
-[contributors-shield]: https://img.shields.io/github/contributors/omar-dulaimi/trpc-shield.svg?style=for-the-badge
-[contributors-url]: https://github.com/omar-dulaimi/trpc-shield/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/omar-dulaimi/trpc-shield.svg?style=for-the-badge
-[forks-url]: https://github.com/omar-dulaimi/trpc-shield/network/members
-[stars-shield]: https://img.shields.io/github/stars/omar-dulaimi/trpc-shield.svg?style=for-the-badge
-[stars-url]: https://github.com/omar-dulaimi/trpc-shield/stargazers
-[issues-shield]: https://img.shields.io/github/issues/omar-dulaimi/trpc-shield.svg?style=for-the-badge
-[issues-url]: https://github.com/omar-dulaimi/trpc-shield/issues
-[license-shield]: https://img.shields.io/github/license/omar-dulaimi/trpc-shield?style=for-the-badge
-[license-url]: https://github.com/omar-dulaimi/trpc-shield/blob/master/LICENSE
+**Parameters:**
+- `permissions` - Object defining rules for queries and mutations
+- `options` - Configuration object
+
+**Options:**
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `allowExternalErrors` | `boolean` | `false` | Allow custom errors to bubble up |
+| `debug` | `boolean` | `false` | Enable debug logging |
+| `fallbackRule` | `Rule` | `allow` | Default rule for undefined paths |
+| `fallbackError` | `string \| Error` | `"Not Authorised!"` | Default error message |
+
+### `rule(name?)(fn)`
+
+Creates a permission rule.
+
+**Parameters:**
+- `name` - Optional rule name for debugging
+- `fn` - Rule function `(ctx, type, path, input, rawInput, options) => boolean | Error | {ctx: object}`
+
+### Logic Operators
+
+- `and(...rules)` - All rules must pass
+- `or(...rules)` - At least one rule must pass  
+- `not(rule, error?)` - Rule must fail
+- `chain(...rules)` - Execute rules sequentially, all must pass
+- `race(...rules)` - Execute rules sequentially until one passes
+
+### Built-in Rules
+
+- `allow` - Always allows access
+- `deny` - Always denies access
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+git clone https://github.com/omar-dulaimi/trpc-shield.git
+cd trpc-shield
+npm install
+npm run build
+npm test
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by [GraphQL Shield](https://github.com/maticzav/graphql-shield)
+- Built for the amazing [tRPC](https://trpc.io) ecosystem
+- Shield icon by [Freepik](https://www.flaticon.com/free-icons/shield) from Flaticon
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by the tRPC Shield team</p>
+  <p>
+    <a href="https://github.com/omar-dulaimi/trpc-shield/stargazers">⭐ Star us on GitHub</a> •
+    <a href="https://github.com/omar-dulaimi/trpc-shield/issues">🐛 Report Issues</a> •
+    <a href="https://github.com/omar-dulaimi/trpc-shield/discussions">💬 Discussions</a>
+  </p>
+</div>

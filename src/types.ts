@@ -1,13 +1,13 @@
 // Rule
 
-export type ShieldRule<TContext> = IRule<TContext> | ILogicRule<TContext>
+export type ShieldRule<TContext> = IRule<TContext> | ILogicRule<TContext>;
 
 export declare class IRule<TContext> {
-  readonly name: string
+  readonly name: string;
 
-  constructor(options: IRuleOptions)
+  constructor(options: IRuleOptions);
 
-  equals(rule: IRule<TContext>): boolean
+  equals(rule: IRule<TContext>): boolean;
   resolve(
     ctx: TContext,
     type: string,
@@ -15,15 +15,16 @@ export declare class IRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult>
+  ): Promise<IRuleResult<TContext>>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IRuleOptions {}
 
 export declare class ILogicRule<TContext> {
-  constructor(rules: ShieldRule<TContext>[])
+  constructor(rules: ShieldRule<TContext>[]);
 
-  getRules(): ShieldRule<TContext>[]
+  getRules(): ShieldRule<TContext>[];
   evaluate(
     ctx: TContext,
     type: string,
@@ -31,7 +32,7 @@ export declare class ILogicRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult[]>
+  ): Promise<IRuleResult<TContext>[]>;
   resolve(
     ctx: TContext,
     type: string,
@@ -39,10 +40,10 @@ export declare class ILogicRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult>
+  ): Promise<IRuleResult<TContext>>;
 }
 
-export type IRuleResult = boolean | string | Error
+export type IRuleResult<TContext = any> = boolean | string | Error | { ctx: Partial<TContext> };
 export type IRuleFunction<TContext extends Record<string, any> = Record<string, any>> = (
   ctx: TContext,
   type: string,
@@ -50,21 +51,22 @@ export type IRuleFunction<TContext extends Record<string, any> = Record<string, 
   input: { [name: string]: any },
   rawInput: unknown,
   options: IOptions<TContext>,
-) => IRuleResult | Promise<IRuleResult>
+) => IRuleResult<TContext> | Promise<IRuleResult<TContext>>;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IRuleConstructorOptions {}
 
 // Rules Definition Tree
 
 export interface IRuleTypeMap<TContext> {
-  [key: string]: ShieldRule<TContext> | IRuleFieldMap<TContext> | IRuleTypeMap<TContext>
+  [key: string]: ShieldRule<TContext> | IRuleFieldMap<TContext> | IRuleTypeMap<TContext>;
 }
 
 export interface IRuleFieldMap<TContext> {
-  [key: string]: ShieldRule<TContext>
+  [key: string]: ShieldRule<TContext>;
 }
 
-export type IRules<TContext> = ShieldRule<TContext> | IRuleTypeMap<TContext>
+export type IRules<TContext> = ShieldRule<TContext> | IRuleTypeMap<TContext>;
 
 export type IFallbackErrorMapperType<TContext> = (
   err: unknown,
@@ -73,24 +75,24 @@ export type IFallbackErrorMapperType<TContext> = (
   path: string,
   input: { [name: string]: any },
   rawInput: unknown,
-) => Promise<Error> | Error
+) => Promise<Error> | Error;
 
-export type IFallbackErrorType<TContext> = Error | IFallbackErrorMapperType<TContext>
+export type IFallbackErrorType<TContext> = Error | IFallbackErrorMapperType<TContext>;
 
 // Generator Options
 
 export interface IOptions<TContext> {
-  debug: boolean
-  allowExternalErrors: boolean
-  fallbackRule: ShieldRule<TContext>
-  fallbackError?: IFallbackErrorType<TContext>
+  debug: boolean;
+  allowExternalErrors: boolean;
+  fallbackRule: ShieldRule<TContext>;
+  fallbackError?: IFallbackErrorType<TContext>;
 }
 
 export interface IOptionsConstructor<TContext> {
-  debug?: boolean
-  allowExternalErrors?: boolean
-  fallbackRule?: ShieldRule<TContext>
-  fallbackError?: string | IFallbackErrorType<TContext>
+  debug?: boolean;
+  allowExternalErrors?: boolean;
+  fallbackRule?: ShieldRule<TContext>;
+  fallbackError?: string | IFallbackErrorType<TContext>;
 }
 
-export declare function shield<TContext>(ruleTree: IRules<TContext>, options: IOptions<TContext>): any
+export declare function shield<TContext>(ruleTree: IRules<TContext>, options: IOptions<TContext>): any;

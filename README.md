@@ -59,9 +59,13 @@ tRPC Shield helps you create a permission layer for your application. Using an i
 <!-- GETTING STARTED -->
 ## Supported tRPC Versions
 
+### tRPC 11
+
+- 0.5.0 and higher
+
 ### tRPC 10
 
-- 0.2.0 and higher
+- 0.2.0 to 0.4.x
 
 ### tRPC 9
 

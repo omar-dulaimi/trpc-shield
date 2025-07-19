@@ -6,12 +6,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is **trpc-shield**, a TypeScript library that provides a permission layer for tRPC applications. It's inspired by GraphQL Shield and allows developers to define authorization rules as middleware for tRPC procedures.
 
+**Version 0.5.0+** supports tRPC v11.x, while earlier versions support tRPC v10.x.
+
 ## Build and Development Commands
 
 - `npm run build` - Compile TypeScript to JavaScript (outputs to `dist/`)
 - `npm run prebuild` - Clean the dist folder before building
 - `npm run release` - Build and publish the package (runs `./package.sh` then publishes from `package/` dir)
 - `npm run prettier` - Format code using Prettier
+
+## Testing
+
+- `npm test` - Run all tests with Vitest
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:ui` - Run tests with Vitest UI
+
+The project has comprehensive test coverage (>94%) including:
+- Unit tests for all rule types and logic operations
+- Integration tests with tRPC procedures
+- Edge case and error handling tests
+- TypeScript type validation tests
+
+## Code Quality
+
+- `npm run lint` - Run ESLint for code linting
+- `npm run lint:fix` - Auto-fix linting issues
+- `npm run typecheck` - Run TypeScript type checking
+
+The project uses:
+- **ESLint 9** with TypeScript support
+- **Prettier** for code formatting
+- **lint-staged** for pre-commit hooks
+- Relaxed type safety for library flexibility while maintaining code quality
 
 ## Architecture
 
@@ -31,6 +58,19 @@ This is **trpc-shield**, a TypeScript library that provides a permission layer f
 2. **Logic Rules**: Composite rules (`and`, `or`, `not`, `chain`, `race`) that combine other rules
 3. **Shield**: Main function that generates tRPC middleware from a rule tree
 4. **Rule Tree**: Nested object structure defining permissions for query/mutation operations
+
+### tRPC v11 Compatibility Notes
+
+In tRPC v11, the `rawInput` parameter in rules may be a Promise that needs to be awaited:
+
+```typescript
+const isOwner = rule<Context>()(async (ctx, type, path, input, rawInput) => {
+  const actualInput = rawInput instanceof Promise ? await rawInput : rawInput
+  return ctx.user?.id === actualInput?.userId
+})
+```
+
+This is due to tRPC v11's lazy input materialization feature.
 
 ### Rule Resolution
 

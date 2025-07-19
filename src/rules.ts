@@ -17,7 +17,7 @@ export class Rule<TContext extends Record<string, any>> implements IRule<TContex
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult> {
+  ): Promise<IRuleResult<TContext>> {
     try {
       /* Resolve */
       const res = await this.executeRule(ctx, type, path, input, rawInput, options);
@@ -28,6 +28,9 @@ export class Rule<TContext extends Record<string, any>> implements IRule<TContex
         return new Error(res);
       } else if (res === true) {
         return true;
+      } else if (typeof res === 'object' && res !== null && 'ctx' in res) {
+        // Context extension object
+        return res as { ctx: Partial<TContext> };
       } else {
         return false;
       }
@@ -57,7 +60,7 @@ export class Rule<TContext extends Record<string, any>> implements IRule<TContex
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): string | boolean | Error | Promise<IRuleResult> {
+  ): string | boolean | Error | { ctx: Partial<TContext> } | Promise<IRuleResult<TContext>> {
     // @ts-ignore
     return this.func(ctx, type, path, input, rawInput, options);
   }
@@ -80,7 +83,7 @@ export class LogicRule<TContext extends Record<string, any>> implements ILogicRu
     _input: { [name: string]: any },
     _rawInput: unknown,
     _options: IOptions<TContext>,
-  ): Promise<IRuleResult> {
+  ): Promise<IRuleResult<TContext>> {
     return false;
   }
 
@@ -94,7 +97,7 @@ export class LogicRule<TContext extends Record<string, any>> implements ILogicRu
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult[]> {
+  ): Promise<IRuleResult<TContext>[]> {
     const rules = this.getRules();
     const tasks = rules.map((rule) => rule.resolve(ctx, type, path, input, rawInput, options));
 
@@ -126,14 +129,17 @@ export class RuleOr<TContext extends Record<string, any>> extends LogicRule<TCon
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult> {
+  ): Promise<IRuleResult<TContext>> {
     const result = await this.evaluate(ctx, type, path, input, rawInput, options);
 
-    if (result.every((res) => res !== true)) {
+    // Look for context extensions
+    const contextExtension = result.find((res) => typeof res === 'object' && res !== null && 'ctx' in res);
+
+    if (result.some((res) => res === true || (typeof res === 'object' && res !== null && 'ctx' in res))) {
+      return contextExtension || true;
+    } else {
       const customError = result.find((res) => res instanceof Error);
       return customError || false;
-    } else {
-      return true;
     }
   }
 }
@@ -153,14 +159,17 @@ export class RuleAnd<TContext extends Record<string, any>> extends LogicRule<TCo
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult> {
+  ): Promise<IRuleResult<TContext>> {
     const result = await this.evaluate(ctx, type, path, input, rawInput, options);
 
-    if (result.some((res) => res !== true)) {
+    // Look for context extensions
+    const contextExtension = result.find((res) => typeof res === 'object' && res !== null && 'ctx' in res);
+
+    if (result.some((res) => res !== true && !(typeof res === 'object' && res !== null && 'ctx' in res))) {
       const customError = result.find((res) => res instanceof Error);
       return customError || false;
     } else {
-      return true;
+      return contextExtension || true;
     }
   }
 }

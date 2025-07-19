@@ -156,6 +156,38 @@ export const permissions = shield<Context>({
 });
 ```
 
+### Context Extension
+
+tRPC Shield supports context extension, similar to tRPC middleware. Rules can extend the context by returning an object with a `ctx` property:
+
+```ts
+const isAuthenticated = rule<Context>()(async (ctx, type, path, input, rawInput) => {
+  if (!ctx.user && ctx.token) {
+    // Validate token and get user information
+    const user = await validateToken(ctx.token);
+    
+    if (user) {
+      // Extend context with user information
+      return { ctx: { user } };
+    }
+    
+    return new Error('Invalid token');
+  }
+  
+  return ctx.user !== null;
+});
+
+// Usage in tRPC procedure
+const protectedProcedure = t.procedure
+  .use(shield({ query: { profile: isAuthenticated } }))
+  .query(({ ctx }) => {
+    // ctx.user is now available and properly typed
+    return `Welcome ${ctx.user.name}!`;
+  });
+```
+
+This enables seamless authentication flows where rules can both authorize requests and extend the context with authentication information.
+
 ### API
 #### `shield(rules?, options?)`
 

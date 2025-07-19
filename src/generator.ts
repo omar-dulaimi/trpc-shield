@@ -42,6 +42,14 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
     if (rule) {
       return rule?.resolve(ctx, type, path, input, rawInput, options).then((result) => {
         if (result instanceof Error) throw result;
+
+        // Handle context extension
+        if (typeof result === 'object' && result !== null && 'ctx' in result) {
+          // Merge context extension and call next with updated context
+          const extendedCtx = { ...ctx, ...result.ctx };
+          return next({ ctx: extendedCtx });
+        }
+
         if (!result) throw options.fallbackError;
         return next();
       });

@@ -15,9 +15,10 @@ export declare class IRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult>;
+  ): Promise<IRuleResult<TContext>>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IRuleOptions {}
 
 export declare class ILogicRule<TContext> {
@@ -31,7 +32,7 @@ export declare class ILogicRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult[]>;
+  ): Promise<IRuleResult<TContext>[]>;
   resolve(
     ctx: TContext,
     type: string,
@@ -39,10 +40,10 @@ export declare class ILogicRule<TContext> {
     input: { [name: string]: any },
     rawInput: unknown,
     options: IOptions<TContext>,
-  ): Promise<IRuleResult>;
+  ): Promise<IRuleResult<TContext>>;
 }
 
-export type IRuleResult = boolean | string | Error;
+export type IRuleResult<TContext = any> = boolean | string | Error | { ctx: Partial<TContext> };
 export type IRuleFunction<TContext extends Record<string, any> = Record<string, any>> = (
   ctx: TContext,
   type: string,
@@ -50,8 +51,9 @@ export type IRuleFunction<TContext extends Record<string, any> = Record<string, 
   input: { [name: string]: any },
   rawInput: unknown,
   options: IOptions<TContext>,
-) => IRuleResult | Promise<IRuleResult>;
+) => IRuleResult<TContext> | Promise<IRuleResult<TContext>>;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IRuleConstructorOptions {}
 
 // Rules Definition Tree

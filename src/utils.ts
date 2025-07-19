@@ -1,5 +1,5 @@
-import { LogicRule, Rule } from './rules'
-import { ILogicRule, IRule, IRuleFieldMap, ShieldRule } from './types'
+import { LogicRule, Rule } from './rules';
+import { ILogicRule, IRule, IRuleFieldMap, ShieldRule } from './types';
 
 /**
  *
@@ -9,7 +9,7 @@ import { ILogicRule, IRule, IRuleFieldMap, ShieldRule } from './types'
  *
  */
 export function isRule<TContext extends Record<string, any>>(x: any): x is IRule<TContext> {
-  return x instanceof Rule || (x && x.constructor && x.constructor.name === 'Rule')
+  return x instanceof Rule || (x?.constructor && x.constructor.name === 'Rule');
 }
 
 /**
@@ -22,8 +22,7 @@ export function isRule<TContext extends Record<string, any>>(x: any): x is IRule
 export function isLogicRule<TContext extends Record<string, any>>(x: any): x is ILogicRule<TContext> {
   return (
     x instanceof LogicRule ||
-    (x &&
-      x.constructor &&
+    (x?.constructor &&
       (x.constructor.name === 'RuleOr' ||
         x.constructor.name === 'RuleAnd' ||
         x.constructor.name === 'RuleChain' ||
@@ -31,7 +30,7 @@ export function isLogicRule<TContext extends Record<string, any>>(x: any): x is 
         x.constructor.name === 'RuleNot' ||
         x.constructor.name === 'RuleTrue' ||
         x.constructor.name === 'RuleFalse'))
-  )
+  );
 }
 
 /**
@@ -42,7 +41,7 @@ export function isLogicRule<TContext extends Record<string, any>>(x: any): x is 
  *
  */
 export function isRuleFunction<TContext extends Record<string, any>>(x: any): x is ShieldRule<TContext> {
-  return isRule(x) || isLogicRule(x)
+  return isRule(x) || isLogicRule(x);
 }
 
 /**
@@ -53,7 +52,7 @@ export function isRuleFunction<TContext extends Record<string, any>>(x: any): x 
  *
  */
 export function isRuleFieldMap<TContext extends Record<string, any>>(x: any): x is IRuleFieldMap<TContext> {
-  return typeof x === 'object' && Object.values(x).every((rule) => isRuleFunction(rule))
+  return typeof x === 'object' && Object.values(x).every((rule) => isRuleFunction(rule));
 }
 
 /**
@@ -67,16 +66,16 @@ export function isRuleFieldMap<TContext extends Record<string, any>>(x: any): x 
  */
 export function flattenObjectOf<T>(obj: { [key: string]: any }, f: (x: any) => boolean): T[] {
   const values = Object.keys(obj).reduce<T[]>((acc, key) => {
-    const val = obj[key]
+    const val = obj[key];
     if (f(val)) {
-      return [...acc, val]
+      return [...acc, val];
     } else if (typeof val === 'object' && !f(val)) {
-      return [...acc, ...flattenObjectOf(val, f)]
+      return [...acc, ...flattenObjectOf(val, f)];
     } else {
-      return acc
+      return acc;
     }
-  }, [])
-  return values
+  }, []);
+  return values;
 }
 
 /**
@@ -87,7 +86,7 @@ export function flattenObjectOf<T>(obj: { [key: string]: any }, f: (x: any) => b
  */
 export function withDefault<T>(fallback: T): (value: T | undefined) => T {
   return (value) => {
-    if (value === undefined) return fallback
-    return value
-  }
+    if (value === undefined) return fallback;
+    return value;
+  };
 }

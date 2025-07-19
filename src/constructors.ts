@@ -1,5 +1,5 @@
-import { Rule, RuleAnd, RuleChain, RuleFalse, RuleNot, RuleOr, RuleRace, RuleTrue } from './rules'
-import { IRuleConstructorOptions, IRuleFunction, ShieldRule } from './types'
+import { Rule, RuleAnd, RuleChain, RuleFalse, RuleNot, RuleOr, RuleRace, RuleTrue } from './rules';
+import { IRuleConstructorOptions, IRuleFunction, ShieldRule } from './types';
 
 /**
  *
@@ -31,18 +31,18 @@ export const rule =
   <TContext extends Record<string, any>>(name?: string, options?: IRuleConstructorOptions) =>
   (func: IRuleFunction<TContext>): Rule<TContext> => {
     if (typeof name === 'object') {
-      options = name
-      name = Math.random().toString()
+      options = name;
+      name = Math.random().toString();
     } else if (typeof name === 'string') {
-      options = options || {}
+      options = options || {};
     } else {
-      name = Math.random().toString()
-      options = {}
+      name = Math.random().toString();
+      options = {};
     }
 
     // @ts-ignore
-    return new Rule(name, func, {})
-  }
+    return new Rule(name, func, {});
+  };
 
 /**
  *
@@ -52,8 +52,8 @@ export const rule =
  *
  */
 export const and = <TContext extends Record<string, any>>(...rules: ShieldRule<TContext>[]): RuleAnd<TContext> => {
-  return new RuleAnd(rules)
-}
+  return new RuleAnd(rules);
+};
 
 /**
  *
@@ -63,8 +63,8 @@ export const and = <TContext extends Record<string, any>>(...rules: ShieldRule<T
  *
  */
 export const chain = <TContext extends Record<string, any>>(...rules: ShieldRule<TContext>[]): RuleChain<TContext> => {
-  return new RuleChain(rules)
-}
+  return new RuleChain(rules);
+};
 
 /**
  *
@@ -74,8 +74,8 @@ export const chain = <TContext extends Record<string, any>>(...rules: ShieldRule
  *
  */
 export const race = <TContext extends Record<string, any>>(...rules: ShieldRule<TContext>[]): RuleRace<TContext> => {
-  return new RuleRace(rules)
-}
+  return new RuleRace(rules);
+};
 
 /**
  *
@@ -85,8 +85,8 @@ export const race = <TContext extends Record<string, any>>(...rules: ShieldRule<
  *
  */
 export const or = <TContext extends Record<string, any>>(...rules: ShieldRule<TContext>[]): RuleOr<TContext> => {
-  return new RuleOr(rules)
-}
+  return new RuleOr(rules);
+};
 
 /**
  *
@@ -99,20 +99,20 @@ export const not = <TContext extends Record<string, any>>(
   rule: ShieldRule<TContext>,
   error?: string | Error,
 ): RuleNot<TContext> => {
-  if (typeof error === 'string') return new RuleNot(rule, new Error(error))
-  return new RuleNot(rule, error)
-}
+  if (typeof error === 'string') return new RuleNot(rule, new Error(error));
+  return new RuleNot(rule, error);
+};
 
 /**
  *
  * Allow queries.
  *
  */
-export const allow = new RuleTrue()
+export const allow = new RuleTrue();
 
 /**
  *
  * Deny queries.
  *
  */
-export const deny = new RuleFalse()
+export const deny = new RuleFalse();

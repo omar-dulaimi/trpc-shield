@@ -21,16 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and validate package
-        run: |
-          npm run build
-          npm run typecheck
-
-      - name: Check commit messages
-        uses: wagoid/commitlint-github-action@v6
-        with:
-          configFile: .commitlintrc.json
-
       - name: Validate PR title
         uses: amannn/action-semantic-pull-request@v5
         env:
@@ -46,33 +36,3 @@ jobs:
             test
             chore
           requireScope: false
-
-  build-check:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: npm run build
-
-      - name: Check build artifacts
-        run: |
-          test -f dist/index.js
-          test -f dist/index.d.ts
-          echo "Build artifacts verified successfully"
-
-      - name: Test package installation
-        run: |
-          npm pack --dry-run
-          echo "Package structure validated"

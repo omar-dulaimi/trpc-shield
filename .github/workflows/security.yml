@@ -2,9 +2,13 @@ name: Security & Dependencies
 
 on:
   schedule:
-    # Run every Monday at 9 AM UTC
-    - cron: '0 9 * * 1'
+    # Run every Monday at 2 AM UTC
+    - cron: '0 2 * * 1'
   workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'package*.json'
 
 jobs:
   audit:
@@ -17,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: '20.x'
           cache: 'npm'
 
       - name: Install dependencies
@@ -28,6 +32,26 @@ jobs:
 
       - name: Check for outdated packages
         run: npm outdated || true
+
+      - name: Generate security report
+        if: always()
+        run: |
+          echo "## Security Audit Report" > security-report.md
+          echo "Date: $(date)" >> security-report.md
+          echo "" >> security-report.md
+          echo "### Audit Results:" >> security-report.md
+          npm audit --json > audit-results.json || true
+          echo "Audit completed - see audit-results.json for details" >> security-report.md
+
+      - name: Upload security results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: |
+            security-report.md
+            audit-results.json
+          retention-days: 30
 
   dependency-review:
     runs-on: ubuntu-latest
@@ -41,3 +65,4 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
+          comment-summary-in-pr: true

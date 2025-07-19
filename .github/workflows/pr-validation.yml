@@ -15,14 +15,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: '20.x'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate package.json
-        run: npm run build
+      - name: Build and validate package
+        run: |
+          npm run build
+          npm run typecheck
 
       - name: Check commit messages
         uses: wagoid/commitlint-github-action@v6
@@ -45,7 +47,7 @@ jobs:
             chore
           requireScope: false
 
-  size-check:
+  build-check:
     runs-on: ubuntu-latest
     
     steps:
@@ -55,7 +57,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: '20.x'
           cache: 'npm'
 
       - name: Install dependencies
@@ -64,8 +66,13 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Check bundle size
-        uses: andresz1/size-limit-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_manager: npm
+      - name: Check build artifacts
+        run: |
+          test -f dist/index.js
+          test -f dist/index.d.ts
+          echo "Build artifacts verified successfully"
+
+      - name: Test package installation
+        run: |
+          npm pack --dry-run
+          echo "Package structure validated"

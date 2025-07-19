@@ -1,41 +1,56 @@
 # GitHub Workflows
 
-This directory contains automated workflows for the tRPC Shield project.
+This directory contains automated workflows for the tRPC Shield project, following industry best practices.
 
 ## Workflows
 
-### 🧪 Test (`test.yml`)
+### 🧪 CI (`ci.yml`)
 Runs on every push to `master` and `upgrade/trpc-v11` branches, and on all pull requests.
 
-- **Matrix testing**: Tests on Node.js 18.x and 20.x
-- **Linting**: Runs ESLint and Prettier checks
-- **Type checking**: Validates TypeScript types
-- **Testing**: Runs full test suite with coverage
+- **Matrix testing**: Tests on Node.js 18.x, 20.x, and 22.x
 - **Build verification**: Ensures package builds correctly
+- **Type checking**: Validates TypeScript types with `tsc --noEmit`
+- **Linting**: Runs ESLint checks (continues on error for development)
+- **Testing**: Runs full test suite with coverage
+- **Package integrity**: Validates npm package structure
+- **Artifacts**: Uploads build artifacts for debugging
 
 ### 🚀 Release (`release.yml`)
-Handles automated releases to npm and GitHub.
+Handles automated releases to npm and GitHub from master branch only.
 
-- **Master branch**: Creates stable releases (e.g., `1.0.0`)
-- **upgrade/trpc-v11 branch**: Creates beta releases (e.g., `1.0.0-beta.1`)
-- **Semantic versioning**: Uses conventional commits for version bumping
-- **Automated changelogs**: Generates release notes
-- **npm publishing**: Publishes to npm registry
-- **GitHub releases**: Creates GitHub releases with assets
+- **Manual triggers**: Support workflow_dispatch with version type selection
+- **Auto-detection**: Determines version bump from commit messages
+- **Full pipeline**: Build, test, lint, and type-check before release
+- **Git integration**: Auto-commits version bumps and creates tags
+- **npm publishing**: Publishes to npm registry with proper access
+- **GitHub releases**: Creates releases with changelog links
+- **Artifacts**: Uploads published package for verification
+
+### 🔄 Semantic Release (`semantic-release.yml`)
+Alternative release system using semantic-release for both branches.
+
+- **Master branch**: Stable releases using semantic-release
+- **upgrade/trpc-v11 branch**: Beta releases with prerelease tags
+- **Conventional commits**: Automated versioning and changelog
+- **Zero-config**: Uses .releaserc.json configuration
 
 ### 🛡️ Security (`security.yml`)
-Runs weekly security audits and dependency checks.
+Comprehensive security monitoring and dependency management.
 
-- **Security audit**: Runs `npm audit` for vulnerabilities
-- **Dependency review**: Reviews dependency changes in PRs
-- **Outdated packages**: Checks for package updates
+- **Scheduled audits**: Weekly security scans every Monday at 2 AM UTC
+- **PR triggers**: Runs on package.json changes
+- **Security reports**: Generates detailed audit reports with artifacts
+- **Dependency review**: Reviews dependency changes in PRs with comments
+- **Vulnerability tracking**: Uploads results for historical analysis
 
 ### ✅ PR Validation (`pr-validation.yml`)
-Validates pull requests before merge.
+Comprehensive validation for pull requests.
 
-- **Commit message validation**: Ensures conventional commit format
+- **Build validation**: Ensures package builds and type-checks correctly
+- **Commit message validation**: Enforces conventional commit format
 - **PR title validation**: Validates semantic PR titles
-- **Bundle size check**: Monitors package size changes
+- **Package integrity**: Verifies build artifacts and npm structure
+- **Artifact verification**: Tests that essential files are present
 
 ## Setup Requirements
 

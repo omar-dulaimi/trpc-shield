@@ -56,7 +56,7 @@ export function validateRuleTree<TContext extends Record<string, any>>(
       if (isLogicRule(rule)) {
         return [...rules, ...extractLogicRules(rule)];
       } else {
-        return [...rules, rule];
+        return [...rules, rule as any];
       }
     }, []);
 
@@ -74,7 +74,7 @@ export function validateRuleTree<TContext extends Record<string, any>>(
       if (isLogicRule(shieldRule)) {
         return [...acc, ...extractLogicRules(shieldRule)];
       } else {
-        return [...acc, shieldRule];
+        return [...acc, shieldRule as any];
       }
     }, []);
   }

@@ -108,11 +108,11 @@ export const not = <TContext extends Record<string, any>>(
  * Allow queries.
  *
  */
-export const allow = new RuleTrue();
+export const allow = new RuleTrue<Record<string, any>>();
 
 /**
  *
  * Deny queries.
  *
  */
-export const deny = new RuleFalse();
+export const deny = new RuleFalse<Record<string, any>>();

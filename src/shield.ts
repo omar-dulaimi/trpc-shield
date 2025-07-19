@@ -21,7 +21,7 @@ function normalizeOptions<TContext extends Record<string, any>>(options: IOption
   return {
     debug: options.debug !== undefined ? options.debug : false,
     allowExternalErrors: withDefault(false)(options.allowExternalErrors),
-    fallbackRule: withDefault<ShieldRule<TContext>>(allow)(options.fallbackRule),
+    fallbackRule: withDefault<ShieldRule<TContext>>(allow as any)(options.fallbackRule),
     fallbackError: withDefault<IFallbackErrorType<TContext>>(new Error('Not Authorised!'))(options.fallbackError),
   };
 }

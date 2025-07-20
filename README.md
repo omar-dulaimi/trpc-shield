@@ -23,17 +23,6 @@
   </p>
 </div>
 
-## ✨ Features
-
-- 🔒 **Rule-based permissions** - Define authorization logic with intuitive, composable rules
-- 🚀 **tRPC v11 support** - Full compatibility with the latest tRPC features
-- 🔄 **Context extension** - Rules can extend context with authentication data
-- 🧩 **Logic operators** - Combine rules with `and`, `or`, `not`, `chain`, and `race`
-- 🛡️ **Secure by default** - Prevents data leaks with fallback rules
-- 📝 **TypeScript first** - Full type safety and IntelliSense support
-- 🎯 **Zero dependencies** - Lightweight and fast
-- 🧪 **Well tested** - 94%+ test coverage
-
 ## 💖 Support This Project
 
 If this tool helps you build better applications, please consider supporting its development:
@@ -47,6 +36,25 @@ If this tool helps you build better applications, please consider supporting its
 Your sponsorship helps maintain and improve this project. Thank you! 🙏
 
 ## 🧪 Beta Testing - v1.0.0-beta.0
+
+**Try the latest beta with enhanced tRPC v11 support!**
+
+```bash
+npm install trpc-shield@beta
+```
+
+This beta includes **major upgrades for tRPC v11.x compatibility and context extension support** - bringing full compatibility with the latest tRPC features and their breaking changes. Please test in development and [report any issues](https://github.com/omar-dulaimi/trpc-shield/issues). Your feedback helps us deliver a stable release!
+
+## ✨ Features
+
+- 🔒 **Rule-based permissions** - Define authorization logic with intuitive, composable rules
+- 🚀 **tRPC v11 support** - Full compatibility with the latest tRPC features
+- 🔄 **Context extension** - Rules can extend context with authentication data
+- 🧩 **Logic operators** - Combine rules with `and`, `or`, `not`, `chain`, and `race`
+- 🛡️ **Secure by default** - Prevents data leaks with fallback rules
+- 📝 **TypeScript first** - Full type safety and IntelliSense support
+- 🎯 **Zero dependencies** - Lightweight and fast
+- 🧪 **Well tested** - 94%+ test coverage
 
 **Try the latest beta with enhanced tRPC v11 support!**
 

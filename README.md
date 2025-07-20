@@ -34,6 +34,18 @@
 - 🎯 **Zero dependencies** - Lightweight and fast
 - 🧪 **Well tested** - 94%+ test coverage
 
+## 💖 Support This Project
+
+If this tool helps you build better applications, please consider supporting its development:
+
+<p align="center">
+  <a href="https://github.com/sponsors/omar-dulaimi">
+    <img src="https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?style=for-the-badge&logo=github" alt="GitHub Sponsors" height="40">
+  </a>
+</p>
+
+Your sponsorship helps maintain and improve this project. Thank you! 🙏
+
 ## 🧪 Beta Testing - v1.0.0-beta.0
 
 **Try the latest beta with enhanced tRPC v11 support!**

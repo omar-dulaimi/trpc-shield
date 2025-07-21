@@ -1,8 +1,21 @@
-# Prevent Claude attribution in commit messages
-if grep -i "claude" "$1" > /dev/null || \
-   grep -i "co-authored-by:.*claude" "$1" > /dev/null || \
-   grep -i "generated with.*claude" "$1" > /dev/null; then
-    echo "❌ ERROR: Commit message contains Claude attribution which is not allowed."
-    echo "Please edit your commit message to remove any Claude references."
+#!/bin/sh
+
+# Read the commit message
+commit_msg=$(cat "$1")
+
+# Check for "claude" in commit message (case insensitive)
+if echo "$commit_msg" | grep -qi "claude"; then
+    echo "L Commit blocked: Commit message contains 'claude'"
+    echo "Please remove any references to Claude from the commit message."
     exit 1
 fi
+
+# Check for "Co-authored-by: Claude" or "Co-Authored-By: Claude" (case insensitive)
+if echo "$commit_msg" | grep -qi "co-authored-by:.*claude"; then
+    echo "L Commit blocked: Commit contains Claude as co-author"
+    echo "Please remove Claude from the co-author list."
+    exit 1
+fi
+
+# If we get here, the commit is allowed
+exit 0

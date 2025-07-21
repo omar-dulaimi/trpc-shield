@@ -29,7 +29,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "prepare": "husky install || true",
+    "prepare": "husky",
     "commit": "git-cz"
   },
   "lint-staged": {

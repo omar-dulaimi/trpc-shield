@@ -1,0 +1,8 @@
+# Prevent Claude attribution in commit messages
+if grep -i "claude" "$1" > /dev/null || \
+   grep -i "co-authored-by:.*claude" "$1" > /dev/null || \
+   grep -i "generated with.*claude" "$1" > /dev/null; then
+    echo "❌ ERROR: Commit message contains Claude attribution which is not allowed."
+    echo "Please edit your commit message to remove any Claude references."
+    exit 1
+fi

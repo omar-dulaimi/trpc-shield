@@ -56,14 +56,6 @@ This beta includes **major upgrades for tRPC v11.x compatibility and context ext
 - 🎯 **Zero dependencies** - Lightweight and fast
 - 🧪 **Well tested** - 94%+ test coverage
 
-**Try the latest beta with enhanced tRPC v11 support!**
-
-```bash
-npm install trpc-shield@beta
-```
-
-This beta includes **major upgrades for tRPC v11.x compatibility and context extension support** - bringing full compatibility with the latest tRPC features and their breaking changes. Please test in development and [report any issues](https://github.com/omar-dulaimi/trpc-shield/issues). Your feedback helps us deliver a stable release!
-
 ## 🚀 Quick Start
 
 ### Installation

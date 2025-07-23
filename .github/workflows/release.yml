@@ -45,6 +45,9 @@ jobs:
         npm run lint || echo "Linting completed with warnings but continuing release"
         npm run test:coverage
         
+    - name: Create distribution zip
+      run: zip -r dist.zip dist/
+        
     - name: Semantic Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

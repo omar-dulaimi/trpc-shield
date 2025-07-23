@@ -1,6 +1,6 @@
 {
   "name": "trpc-shield",
-  "version": "1.0.0-beta.1",
+  "version": "1.1.0",
   "type": "module",
   "description": "tRPC permissions as another layer of abstraction!",
   "repository": "https://github.com/omar-dulaimi/trpc-shield",
@@ -48,7 +48,7 @@
     "@semantic-release/commit-analyzer": "^11.1.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.2.6",
-    "@semantic-release/npm": "^11.0.2",
+    "@semantic-release/npm": "^11.0.3",
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@types/node": "24.0.15",
     "@types/supertest": "^6.0.2",

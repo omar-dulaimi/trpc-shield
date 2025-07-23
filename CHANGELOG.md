@@ -1,3 +1,16 @@
+## [1.1.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.0.0...v1.1.0) (2025-07-23)
+
+
+### 🚀 Features
+
+* re-enable git plugin now that branch protection is disabled ([d94f7b6](https://github.com/omar-dulaimi/trpc-shield/commit/d94f7b6ed93fa89c39f38380e013383e94b09f76))
+* switch to semantic-release bot approach for releases ([ce61b2e](https://github.com/omar-dulaimi/trpc-shield/commit/ce61b2e2ba1073d26dcdb90d5769ebb1b6997f01))
+
+
+### 🐛 Bug Fixes
+
+* disable git plugin again due to protected branch restrictions ([bdfc0f1](https://github.com/omar-dulaimi/trpc-shield/commit/bdfc0f1fbbf1d711fac66e748a70eb3efb8dad41))
+
 ## 1.0.0-beta.1 (2025-07-19)
 
 

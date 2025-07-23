@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.1.0...v1.2.0) (2025-07-23)
+
+
+### 🚀 Features
+
+* provide zipped distribution assets in GitHub releases ([a261891](https://github.com/omar-dulaimi/trpc-shield/commit/a261891d4f1c18d2ae0b7a996ae68d3239b075db))
+
 ## [1.1.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.0.0...v1.1.0) (2025-07-23)
 
 

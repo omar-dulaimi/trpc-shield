@@ -4,7 +4,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/trpc-shield?style=for-the-badge&logo=npm&color=green)](https://www.npmjs.com/package/trpc-shield)
 [![GitHub Stars](https://img.shields.io/github/stars/omar-dulaimi/trpc-shield?style=for-the-badge&logo=github&color=yellow)](https://github.com/omar-dulaimi/trpc-shield/stargazers)
 [![License](https://img.shields.io/github/license/omar-dulaimi/trpc-shield?style=for-the-badge&color=purple)](https://github.com/omar-dulaimi/trpc-shield/blob/master/LICENSE)
-[![Test Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen?style=for-the-badge)](https://github.com/omar-dulaimi/trpc-shield)
+[![Test Coverage](https://img.shields.io/badge/coverage-comprehensive-brightgreen?style=for-the-badge)](https://github.com/omar-dulaimi/trpc-shield)
 
 <div align="center">
   <img src="media/shield.png" alt="tRPC Shield Logo" width="200">
@@ -35,15 +35,15 @@ If this tool helps you build better applications, please consider supporting its
 
 Your sponsorship helps maintain and improve this project. Thank you! 🙏
 
-## 🧪 Beta Testing - v1.0.0-beta.0
+## 🆕 Latest Version
 
-**Try the latest beta with enhanced tRPC v11 support!**
+**Get the latest stable version with full tRPC v11 support!**
 
 ```bash
-npm install trpc-shield@beta
+npm install trpc-shield
 ```
 
-This beta includes **major upgrades for tRPC v11.x compatibility and context extension support** - bringing full compatibility with the latest tRPC features and their breaking changes. Please test in development and [report any issues](https://github.com/omar-dulaimi/trpc-shield/issues). Your feedback helps us deliver a stable release!
+This version includes **tRPC v11.x compatibility and context extension support** - bringing full compatibility with the latest tRPC features. For specific version requirements, see the [compatibility table](#-version-compatibility) below.
 
 ## ✨ Features
 
@@ -54,7 +54,7 @@ This beta includes **major upgrades for tRPC v11.x compatibility and context ext
 - 🛡️ **Secure by default** - Prevents data leaks with fallback rules
 - 📝 **TypeScript first** - Full type safety and IntelliSense support
 - 🎯 **Zero dependencies** - Lightweight and fast
-- 🧪 **Well tested** - 94%+ test coverage
+- 🧪 **Well tested** - Comprehensive test coverage
 
 ## 🚀 Quick Start
 
@@ -118,13 +118,13 @@ const protectedProcedure = t.procedure.use(middleware);
 | v10.x | v0.2.0 - v0.4.x | ⚠️ Legacy |
 | v9.x | v0.1.2 and below | ❌ Deprecated |
 
-### 🆕 What's New in v1.0.0
+### 🆕 What's New in Latest Version
 
 - **tRPC v11 Support** - Full compatibility with latest tRPC features
 - **Context Extension** - Rules can now extend context (see [Context Extension](#-context-extension))
 - **Improved TypeScript** - Better type inference and safety
 - **Performance Optimizations** - Faster rule evaluation
-- **Enhanced Testing** - 94%+ test coverage
+- **Enhanced Testing** - Comprehensive test coverage
 
 ## 🔧 Core Concepts
 
@@ -425,7 +425,7 @@ const permissions = shield<Context>({
 
 ## 🧪 Testing
 
-tRPC Shield is extensively tested with 94%+ coverage. Test your rules in isolation:
+tRPC Shield is extensively tested with comprehensive coverage. Test your rules in isolation:
 
 ```typescript
 import { describe, it, expect } from 'vitest';

@@ -1,3 +1,20 @@
+## [1.3.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.2.0...v1.3.0) (2025-07-25)
+
+### 🚀 Features
+
+* update main library dependencies to latest versions ([8d174ae](https://github.com/omar-dulaimi/trpc-shield/commit/8d174ae9f884e57ff3c7b232c90c71479a75b4a8))
+* upgrade to tRPC v11 and update dependencies ([bcf4b25](https://github.com/omar-dulaimi/trpc-shield/commit/bcf4b25c81ed67391068cc8215d8266979edd629))
+
+### 🐛 Bug Fixes
+
+* regenerate package-lock.json files for CI consistency ([5f66c63](https://github.com/omar-dulaimi/trpc-shield/commit/5f66c63633bb4caca90b07d83e8c15817f48c5fb))
+
+### ♻️ Code Refactoring
+
+* remove generated shield file from example ([2c71934](https://github.com/omar-dulaimi/trpc-shield/commit/2c719347a4557e49a8b20db80c28c66284e3d8b9))
+* remove prisma-trpc-shield-generator from example ([624b27c](https://github.com/omar-dulaimi/trpc-shield/commit/624b27c3fe4e3873d389c9651c6fe3ed8f29e8b9))
+* update generated tRPC schemas and routers for Prisma v6 ([8d841d2](https://github.com/omar-dulaimi/trpc-shield/commit/8d841d257ed05d764df98f8ec6a8a2e0163ebb86))
+
 ## [1.2.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.1.0...v1.2.0) (2025-07-23)
 
 

@@ -1,5 +1,6 @@
 import { t, shieldedProcedure } from "./helpers/createRouter";
 import { UserAggregateSchema } from "../schemas/aggregateUser.schema";
+import { UserCreateManySchema } from "../schemas/createManyUser.schema";
 import { UserCreateOneSchema } from "../schemas/createOneUser.schema";
 import { UserDeleteManySchema } from "../schemas/deleteManyUser.schema";
 import { UserDeleteOneSchema } from "../schemas/deleteOneUser.schema";
@@ -16,6 +17,11 @@ export const usersRouter = t.router({
     .input(UserAggregateSchema).query(async ({ ctx, input }) => {
       const aggregateUser = await ctx.prisma.user.aggregate(input);
       return aggregateUser;
+    }),
+  createManyUser: shieldedProcedure
+    .input(UserCreateManySchema).mutation(async ({ ctx, input }) => {
+      const createManyUser = await ctx.prisma.user.createMany(input);
+      return createManyUser;
     }),
   createOneUser: shieldedProcedure
     .input(UserCreateOneSchema).mutation(async ({ ctx, input }) => {

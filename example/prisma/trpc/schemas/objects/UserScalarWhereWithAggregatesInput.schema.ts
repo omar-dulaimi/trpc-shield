@@ -6,7 +6,7 @@ import { StringWithAggregatesFilterObjectSchema } from './StringWithAggregatesFi
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.UserScalarWhereWithAggregatesInput> = z
+const Schema: z.ZodType<any> = z
   .object({
     AND: z
       .union([
@@ -25,7 +25,7 @@ const Schema: z.ZodType<Prisma.UserScalarWhereWithAggregatesInput> = z
       ])
       .optional(),
     id: z.union([z.lazy(() => IntWithAggregatesFilterObjectSchema), z.number()]).optional(),
-    createdAt: z.union([z.lazy(() => DateTimeWithAggregatesFilterObjectSchema), z.date()]).optional(),
+    createdAt: z.union([z.lazy(() => DateTimeWithAggregatesFilterObjectSchema), z.coerce.date()]).optional(),
     username: z
       .union([z.lazy(() => StringNullableWithAggregatesFilterObjectSchema), z.string()])
       .optional()

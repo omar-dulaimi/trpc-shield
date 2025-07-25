@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.NestedDateTimeFilter> = z
+const Schema: z.ZodType<any> = z
   .object({
-    equals: z.date().optional(),
-    in: z.date().array().optional(),
-    notIn: z.date().array().optional(),
-    lt: z.date().optional(),
-    lte: z.date().optional(),
-    gt: z.date().optional(),
-    gte: z.date().optional(),
-    not: z.union([z.date(), z.lazy(() => NestedDateTimeFilterObjectSchema)]).optional(),
+    equals: z.coerce.date().optional(),
+    in: z.coerce.date().array().optional(),
+    notIn: z.coerce.date().array().optional(),
+    lt: z.coerce.date().optional(),
+    lte: z.coerce.date().optional(),
+    gt: z.coerce.date().optional(),
+    gte: z.coerce.date().optional(),
+    not: z.union([z.coerce.date(), z.lazy(() => NestedDateTimeFilterObjectSchema)]).optional(),
   })
   .strict();
 

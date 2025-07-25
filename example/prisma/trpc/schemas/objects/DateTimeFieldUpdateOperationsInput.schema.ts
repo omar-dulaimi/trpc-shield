@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput> = z
+const Schema: z.ZodType<any> = z
   .object({
-    set: z.date().optional(),
+    set: z.coerce.date().optional(),
   })
   .strict();
 

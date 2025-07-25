@@ -1,12 +1,12 @@
 import * as trpc from "@trpc/server";
 import { permissions } from "../../shield/shield";
 
-import { Context } from '../../../../src/context';
+import type { Context } from '../../../../src/context';
 
 export const t = trpc.initTRPC.context<Context>().create();
 
 export const globalMiddleware = t.middleware(async ({ ctx, next }) => {
-  console.log('inside middleware!')
+  // Add your middleware logic here
   return next()
 });
 

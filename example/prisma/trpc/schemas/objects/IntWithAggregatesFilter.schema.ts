@@ -5,7 +5,7 @@ import { NestedFloatFilterObjectSchema } from './NestedFloatFilter.schema';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.IntWithAggregatesFilter> = z
+const Schema: z.ZodType<any> = z
   .object({
     equals: z.number().optional(),
     in: z.number().array().optional(),

@@ -15,7 +15,7 @@ const Schema: z.ZodType<Prisma.UserWhereInput> = z
       .optional(),
     NOT: z.union([z.lazy(() => UserWhereInputObjectSchema), z.lazy(() => UserWhereInputObjectSchema).array()]).optional(),
     id: z.union([z.lazy(() => IntFilterObjectSchema), z.number()]).optional(),
-    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.coerce.date()]).optional(),
     username: z
       .union([z.lazy(() => StringNullableFilterObjectSchema), z.string()])
       .optional()

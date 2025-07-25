@@ -12,11 +12,6 @@ generator trpc {
   contextPath    = "../src/context"
 }
 
-generator trpc_shield {
-  provider = "prisma-trpc-shield-generator"
-  output   = "./shield"
-}
-
 datasource db {
   provider = "sqlite"
   url      = "file:db.sqlite"

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.NestedIntFilter> = z
+const Schema: z.ZodType<any> = z
   .object({
     equals: z.number().optional(),
     in: z.number().array().optional(),

@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.UserCreateInput> = z
+const Schema: z.ZodType<any> = z
   .object({
+    id: z.number().optional(),
     createdAt: z.coerce.date().optional(),
     username: z.string().optional().nullable(),
     password: z.string().optional().nullable(),
@@ -12,4 +13,4 @@ const Schema: z.ZodType<Prisma.UserCreateInput> = z
   })
   .strict();
 
-export const UserCreateInputObjectSchema = Schema;
+export const UserCreateManyInputObjectSchema = Schema;

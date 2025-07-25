@@ -3,14 +3,14 @@ import { SortOrderSchema } from '../enums/SortOrder.schema';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.UserMaxOrderByAggregateInput> = z
+const Schema: z.ZodType<any> = z
   .object({
-    id: z.lazy(() => SortOrderSchema).optional(),
-    createdAt: z.lazy(() => SortOrderSchema).optional(),
-    username: z.lazy(() => SortOrderSchema).optional(),
-    password: z.lazy(() => SortOrderSchema).optional(),
-    email: z.lazy(() => SortOrderSchema).optional(),
-    googleId: z.lazy(() => SortOrderSchema).optional(),
+    id: SortOrderSchema.optional(),
+    createdAt: SortOrderSchema.optional(),
+    username: SortOrderSchema.optional(),
+    password: SortOrderSchema.optional(),
+    email: SortOrderSchema.optional(),
+    googleId: SortOrderSchema.optional(),
   })
   .strict();
 

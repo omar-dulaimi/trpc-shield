@@ -6,10 +6,10 @@ import { StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdat
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.UserUncheckedUpdateManyInput> = z
+const Schema: z.ZodType<any> = z
   .object({
     id: z.union([z.number(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
-    createdAt: z.union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
+    createdAt: z.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
     username: z
       .union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)])
       .optional()

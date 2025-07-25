@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.UserSelect> = z
+const Schema: z.ZodType<any> = z
   .object({
     id: z.boolean().optional(),
     createdAt: z.boolean().optional(),

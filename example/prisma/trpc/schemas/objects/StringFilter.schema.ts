@@ -3,7 +3,7 @@ import { NestedStringFilterObjectSchema } from './NestedStringFilter.schema';
 
 import type { Prisma } from '@prisma/client';
 
-const Schema: z.ZodType<Prisma.StringFilter> = z
+const Schema: z.ZodType<any> = z
   .object({
     equals: z.string().optional(),
     in: z.string().array().optional(),

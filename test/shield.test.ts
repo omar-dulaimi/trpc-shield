@@ -177,7 +177,7 @@ describe('shield', () => {
       await expect(permissions(opts)).rejects.toThrow('Not Authorised!');
     });
 
-    it('should handle rule that returns Error object', async () => {
+    it('should mask rule that returns Error object by default', async () => {
       const errorRule = rule<TestContext>()(async () => {
         return new Error('Custom rule error');
       });
@@ -191,10 +191,10 @@ describe('shield', () => {
       const ctx = createTestContext();
       const opts = createMockMiddlewareOpts(ctx, 'query', 'test');
 
-      await expect(permissions(opts)).rejects.toThrow('Custom rule error');
+      await expect(permissions(opts)).rejects.toThrow('Not Authorised!');
     });
 
-    it('should handle rule that returns string error', async () => {
+    it('should mask rule that returns string error by default', async () => {
       const stringErrorRule = rule<TestContext>()(async () => {
         return 'String error message';
       });
@@ -208,7 +208,34 @@ describe('shield', () => {
       const ctx = createTestContext();
       const opts = createMockMiddlewareOpts(ctx, 'query', 'test');
 
-      await expect(permissions(opts)).rejects.toThrow('String error message');
+      await expect(permissions(opts)).rejects.toThrow('Not Authorised!');
+    });
+
+    it('should allow custom rule errors when allowExternalErrors is true', async () => {
+      const errorRule = rule<TestContext>()(async () => {
+        return new Error('Custom rule error');
+      });
+
+      const stringErrorRule = rule<TestContext>()(async () => {
+        return 'String error message';
+      });
+
+      const permissions = shield<TestContext>(
+        {
+          query: {
+            err: errorRule,
+            str: stringErrorRule,
+          },
+        },
+        { allowExternalErrors: true },
+      );
+
+      const ctx = createTestContext();
+      const errorOpts = createMockMiddlewareOpts(ctx, 'query', 'err');
+      await expect(permissions(errorOpts)).rejects.toThrow('Custom rule error');
+
+      const stringOpts = createMockMiddlewareOpts(ctx, 'query', 'str');
+      await expect(permissions(stringOpts)).rejects.toThrow('String error message');
     });
 
     it('should respect debug mode for rule errors', async () => {

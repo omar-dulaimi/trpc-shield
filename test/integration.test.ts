@@ -215,12 +215,15 @@ describe('Integration Tests', () => {
         return 'String error message';
       });
 
-      const permissions = shield<TestContext>({
-        query: {
-          customError: customErrorRule,
-          stringError: stringErrorRule,
+      const permissions = shield<TestContext>(
+        {
+          query: {
+            customError: customErrorRule,
+            stringError: stringErrorRule,
+          },
         },
-      });
+        { allowExternalErrors: true },
+      );
 
       const protectedProcedure = t.procedure.use(permissions);
       const router = t.router({

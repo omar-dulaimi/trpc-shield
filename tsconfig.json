@@ -3,7 +3,7 @@
     "incremental": true,
     "baseUrl": ".",
 
-    "outDir": "dist",
+    "outDir": "lib",
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -25,5 +25,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["dist"]
+  "exclude": ["lib"]
 }

@@ -10,17 +10,17 @@ This is **trpc-shield**, a TypeScript library that provides a permission layer f
 
 ## Build and Development Commands
 
-- `npm run build` - Compile TypeScript to JavaScript (outputs to `dist/`)
-- `npm run prebuild` - Clean the dist folder before building
-- `npm run release` - Build and publish the package (runs `./package.sh` then publishes from `package/` dir)
-- `npm run prettier` - Format code using Prettier
+- `pnpm build` - Compile TypeScript to JavaScript (outputs to `lib/`)
+- `pnpm prebuild` - Clean the lib folder before building
+- `pnpm release` - Build and publish the package (runs `./package.sh` then publishes from `package/` dir)
+- `pnpm prettier` - Format code using Prettier
 
 ## Testing
 
-- `npm test` - Run all tests with Vitest
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Run tests with coverage report
-- `npm run test:ui` - Run tests with Vitest UI
+- `pnpm test` - Run all tests with Vitest
+- `pnpm test:watch` - Run tests in watch mode
+- `pnpm test:coverage` - Run tests with coverage report
+- `pnpm test:ui` - Run tests with Vitest UI
 
 The project has comprehensive test coverage (>94%) including:
 - Unit tests for all rule types and logic operations
@@ -30,9 +30,9 @@ The project has comprehensive test coverage (>94%) including:
 
 ## Code Quality
 
-- `npm run lint` - Run ESLint for code linting
-- `npm run lint:fix` - Auto-fix linting issues
-- `npm run typecheck` - Run TypeScript type checking
+- `pnpm lint` - Run ESLint for code linting
+- `pnpm lint:fix` - Auto-fix linting issues
+- `pnpm typecheck` - Run TypeScript type checking
 
 The project uses:
 - **ESLint 9** with TypeScript support
@@ -105,5 +105,5 @@ shield({
 - The project uses TypeScript with strict mode enabled
 - No tests are currently defined in package.json
 - Example implementation available in `example/` directory with Prisma integration
-- Built files are excluded from Git (in `dist/`)
+- Built files are excluded from Git (in `lib/`)
 - Package publication uses a custom script that operates from a `package/` subdirectory

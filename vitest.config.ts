@@ -8,7 +8,7 @@ export default defineConfig({
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     exclude: [
       '**/node_modules/**',
-      '**/dist/**',
+      '**/lib/**',
       '**/example/**',
       '**/.{idea,git,cache,output,temp}/**'
     ],
@@ -17,7 +17,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
-        'dist/',
+        'lib/',
         'example/',
         '**/*.d.ts',
         '**/*.config.{js,ts}',

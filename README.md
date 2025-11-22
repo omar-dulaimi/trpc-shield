@@ -40,7 +40,7 @@ Your sponsorship helps maintain and improve this project. Thank you! 🙏
 **Get the latest stable version with full tRPC v11 support!**
 
 ```bash
-npm install trpc-shield
+pnpm add trpc-shield
 ```
 
 This version includes **tRPC v11.x compatibility and context extension support** - bringing full compatibility with the latest tRPC features. For specific version requirements, see the [compatibility table](#-version-compatibility) below.
@@ -61,14 +61,14 @@ This version includes **tRPC v11.x compatibility and context extension support**
 ### Installation
 
 ```bash
+# pnpm (recommended)
+pnpm add trpc-shield
+
 # npm
 npm install trpc-shield
 
 # yarn
 yarn add trpc-shield
-
-# pnpm
-pnpm add trpc-shield
 ```
 
 ### Basic Example
@@ -524,9 +524,9 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ```bash
 git clone https://github.com/omar-dulaimi/trpc-shield.git
 cd trpc-shield
-npm install
-npm run build
-npm test
+pnpm install
+pnpm build
+pnpm test
 ```
 
 ## 📄 License

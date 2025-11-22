@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/omar-dulaimi/trpc-shield/compare/v2.0.0...v2.0.1) (2025-11-22)
+
+### 🐛 Bug Fixes
+
+* **ci:** remove unsupported --dry-run flag from pnpm pack ([89b7eb2](https://github.com/omar-dulaimi/trpc-shield/commit/89b7eb2b063dae334cd8151fa8d883080aae0fc2))
+
 ## [2.0.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.2.0...v2.0.0) (2025-11-22)
 
 ### ⚠ BREAKING CHANGES

@@ -1,6 +1,6 @@
 {
   "name": "trpc-shield",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "tRPC permissions as another layer of abstraction!",
   "repository": "https://github.com/omar-dulaimi/trpc-shield",

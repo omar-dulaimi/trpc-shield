@@ -1,3 +1,13 @@
+## [2.0.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.2.0...v2.0.0) (2025-11-22)
+
+### ⚠ BREAKING CHANGES
+
+* Drop Node.js 18.x support, minimum is now 20.x
+
+### 🚀 Features
+
+* migrate CI/CD to pnpm and update Node.js requirements ([80767f3](https://github.com/omar-dulaimi/trpc-shield/commit/80767f380282ba8bf857d7114c822f698ef6316b))
+
 ## [1.2.0](https://github.com/omar-dulaimi/trpc-shield/compare/v1.1.0...v1.2.0) (2025-07-23)
 
 

@@ -81,7 +81,7 @@ jobs:
 
       - name: Test package integrity
         run: |
-          pnpm pack --dry-run
+          pnpm pack
           
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

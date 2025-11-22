@@ -31,7 +31,7 @@ jobs:
 
     - name: Install semantic-release dependencies
       run: |
-        pnpm add -D \
+        pnpm add -wD \
           semantic-release \
           @semantic-release/changelog \
           @semantic-release/git \

@@ -18,27 +18,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
-        run: npm run build
+        run: pnpm build
 
       - name: Run type checking
-        run: npm run typecheck
+        run: pnpm typecheck
 
       - name: Run linting
-        run: npm run lint || echo "Linting failed but continuing for now"
+        run: pnpm lint || echo "Linting failed but continuing for now"
         continue-on-error: true
 
       - name: Run tests
-        run: npm run test:coverage
+        run: pnpm test:coverage
         timeout-minutes: 10
 
       - name: Upload coverage to Codecov
@@ -55,27 +60,32 @@ jobs:
   package-test:
     runs-on: ubuntu-latest
     needs: test
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build and package
         run: |
-          npm run build
-          
+          pnpm build
+
       - name: Test package integrity
         run: |
-          npm pack --dry-run
+          pnpm pack --dry-run
           
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

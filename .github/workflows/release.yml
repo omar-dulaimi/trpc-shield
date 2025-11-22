@@ -49,7 +49,7 @@ jobs:
         pnpm test:coverage
         
     - name: Create distribution zip
-      run: zip -r dist.zip dist/
+      run: zip -r lib.zip lib/
         
     - name: Semantic Release
       env:

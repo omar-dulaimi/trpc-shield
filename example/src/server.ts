@@ -1,6 +1,6 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import express from 'express';
-import { appRouter } from '../prisma/trpc/routers/index';
+import { appRouter } from './router';
 import { createContext } from './context';
 
 const PORT = 3001;

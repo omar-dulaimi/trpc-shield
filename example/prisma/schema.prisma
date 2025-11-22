@@ -2,24 +2,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator trpc {
-  provider          = "prisma-trpc-generator"
-  output            = "./trpc"
-  isGenerateSelect  = true
-  isGenerateInclude = true
-  withMiddleware    = true
-  withShield        = true
-  contextPath    = "../src/context"
-}
-
-generator trpc_shield {
-  provider = "prisma-trpc-shield-generator"
-  output   = "./shield"
-}
-
 datasource db {
   provider = "sqlite"
-  url      = "file:db.sqlite"
 }
 
 model User {

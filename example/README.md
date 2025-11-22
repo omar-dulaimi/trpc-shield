@@ -12,11 +12,11 @@ Download this example:
 npx create-trpc-appx --example https://github.com/omar-dulaimi/trpc-shield/tree/master/example
 ```
 
-Install npm dependencies:
+Install pnpm dependencies:
 
 ```
 cd express-trpc-shield
-npm install
+pnpm install
 ```
 
 ### 2. Create and seed the database using Prisma
@@ -24,63 +24,31 @@ npm install
 Run the following command to create your SQLite database file:
 
 ```bash
-npx prisma migrate dev --name init
+pnpm prisma migrate dev --name init
 ```
 
-### 3. Import Context
-
-Add `Context` type import in `./routers/helpers/createRouter.ts`
-
-```ts
-import { Context } from '../../../../src/context';
-```
-
-Example `Context`:
-
-```ts
-import { PrismaClient } from '@prisma/client';
-import * as trpc from '@trpc/server';
-
-export const createContext = () => {
-  const prisma = new PrismaClient();
-  return {
-    prisma,
-  };
-};
-
-export type Context = trpc.inferAsyncReturnType<typeof createContext>;
-```
-
-### 4. Attach permissions as a middleware
-
-In your top-level, import your auto-generated shield and attach it to the router:
-
-```ts
-import { permissions } from '../../../shield/shield';
-
-export function createProtectedRouter() {
-  return (
-    trpc
-      .router<Context>()
-      .middleware(permissions)
-  );
-}
-```
-
-### 5. Start the server
+### 3. Start the server
 
 Launch your server with this command:
 
 ```
-npm run dev
+pnpm dev
 ```
 
 Now your server is ready to use at: [http://localhost:3001](http://localhost:3001)
 
-Note: Your `tRPC` endpoint is where your requests will go, so make sure to add a `/trpc`.
+### 4. Simulate authenticated requests
 
-Example endpoint:
+This example reads the following headers to populate `ctx.user`:
 
-```
-http://localhost:3001/trpc/user.updateOneUser
+- `x-user-id`: numeric identifier for the user (any positive integer).
+- `x-user-role`: `admin` or `user` (defaults to `user` if omitted).
+
+All routes are mounted under `/trpc`. For example, you can fetch a user by ID with:
+
+```bash
+curl -X POST http://localhost:3001/trpc/user.byId \
+  -H 'content-type: application/json' \
+  -H 'x-user-id: 1' \
+  -d '{"input":{"id":1}}'
 ```

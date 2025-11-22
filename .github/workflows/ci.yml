@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master, upgrade/trpc-v11]
+    branches: [master]
   pull_request:
     branches: [master]
 

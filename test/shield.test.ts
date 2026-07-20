@@ -157,6 +157,38 @@ describe('shield', () => {
       const mutationOpts = createMockMiddlewareOpts(ctx, 'mutation', 'user.create');
       await expect(permissions(mutationOpts)).rejects.toThrow('Not Authorised!');
     });
+
+    it('should work with deeply-namespaced structure', async () => {
+      const permissions = shield<TestContext>({
+        admin: {
+          user: {
+            query: {
+              findMany: isAuthenticated,
+              findUnique: allow,
+            },
+            mutation: {
+              create: isAdmin,
+            },
+          },
+        },
+      });
+
+      const ctx = createTestContext({ id: '1', role: 'user' });
+
+      // Test namespaced query
+      const queryOpts = createMockMiddlewareOpts(ctx, 'query', 'admin.user.findMany');
+      await permissions(queryOpts);
+      expect(queryOpts.next).toHaveBeenCalled();
+
+      // Test public namespaced query
+      const publicOpts = createMockMiddlewareOpts(ctx, 'query', 'admin.user.findUnique');
+      await permissions(publicOpts);
+      expect(publicOpts.next).toHaveBeenCalled();
+
+      // Test admin-only mutation
+      const mutationOpts = createMockMiddlewareOpts(ctx, 'mutation', 'admin.user.create');
+      await expect(permissions(mutationOpts)).rejects.toThrow('Not Authorised!');
+    });
   });
 
   describe('error handling', () => {

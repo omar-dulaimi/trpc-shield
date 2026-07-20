@@ -2,6 +2,12 @@ packages:
   - .
   - example
 
+allowBuilds:
+  '@prisma/engines': true
+  better-sqlite3: true
+  esbuild: true
+  prisma: true
+
 onlyBuiltDependencies:
   - esbuild
   - '@prisma/client'

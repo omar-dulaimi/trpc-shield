@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "paths": { "*": ["./*"] },
     "outDir": "./lib",
     "rootDir": "./src",
 

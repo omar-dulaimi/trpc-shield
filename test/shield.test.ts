@@ -159,19 +159,24 @@ describe('shield', () => {
     });
 
     it('should work with deeply-namespaced structure', async () => {
-      const permissions = shield<TestContext>({
-        admin: {
-          user: {
-            query: {
-              findMany: isAuthenticated,
-              findUnique: allow,
-            },
-            mutation: {
-              create: isAdmin,
+      const permissions = shield<TestContext>(
+        {
+          admin: {
+            user: {
+              query: {
+                findMany: isAuthenticated,
+                findUnique: allow,
+              },
+              mutation: {
+                create: isAdmin,
+              },
             },
           },
         },
-      });
+        {
+          fallbackRule: deny,
+        },
+      );
 
       const ctx = createTestContext({ id: '1', role: 'user' });
 
@@ -188,6 +193,10 @@ describe('shield', () => {
       // Test admin-only mutation
       const mutationOpts = createMockMiddlewareOpts(ctx, 'mutation', 'admin.user.create');
       await expect(permissions(mutationOpts)).rejects.toThrow('Not Authorised!');
+
+      // Test fallback
+      const fallbackOpts = createMockMiddlewareOpts(ctx, 'query', 'admin.user.groups.findMany');
+      await expect(permissions(fallbackOpts)).rejects.toThrow('Not Authorised!');
     });
   });
 

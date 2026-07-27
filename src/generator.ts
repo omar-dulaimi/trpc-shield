@@ -26,7 +26,10 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
     const opName: string = opWithPath[opWithPath.length - 1];
     const keys = Object.keys(ruleTree);
     let rule: ShieldRule<TContext> | undefined;
-    if (keys.includes('query') || keys.includes('mutation')) {
+    // Every operation type must be listed. Omitting 'subscription' meant a tree holding only
+    // subscription rules took the namespaced branch, matched nothing, and fell through to the
+    // default `allow`, leaving the subscription unprotected.
+    if (keys.includes('query') || keys.includes('mutation') || keys.includes('subscription')) {
       //@ts-ignore
       rule = ruleTree?.[type]?.[opName];
     } else {

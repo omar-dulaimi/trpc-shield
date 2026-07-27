@@ -37,7 +37,7 @@ jobs:
         run: pnpm typecheck
 
       - name: Run linting
-        run: pnpm lint || echo "Linting failed but continuing for now"
+        run: pnpm lint
         continue-on-error: true
 
       - name: Run tests

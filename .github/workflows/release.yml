@@ -9,6 +9,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      # Required for npm Trusted Publishing: @semantic-release/npm requests a GitHub OIDC token and
+      # exchanges it with the registry for a short-lived credential.
+      id-token: write
     
     steps:
     - name: Checkout code
@@ -23,29 +30,19 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22.x'
+        # Trusted publishing needs npm >= 11.5.1, which ships with Node 24. Node 22 carries npm 10
+        # and cannot perform the OIDC exchange.
+        node-version: '24.x'
         cache: 'pnpm'
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Install semantic-release dependencies
-      run: |
-        pnpm add -wD \
-          semantic-release \
-          @semantic-release/changelog \
-          @semantic-release/git \
-          @semantic-release/github \
-          @semantic-release/npm \
-          @semantic-release/commit-analyzer \
-          @semantic-release/release-notes-generator \
-          conventional-changelog-conventionalcommits
-
     - name: Build and test
       run: |
         pnpm build
         pnpm typecheck
-        pnpm lint || echo "Linting completed with warnings but continuing release"
+        pnpm lint
         pnpm test:coverage
         
     - name: Create distribution zip
@@ -54,5 +51,5 @@ jobs:
     - name: Semantic Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: npx semantic-release
+        # No NPM_TOKEN: auth is the OIDC exchange. Setting one would write a conflicting .npmrc.
+      run: pnpm exec semantic-release

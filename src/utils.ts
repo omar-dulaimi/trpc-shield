@@ -9,7 +9,7 @@ import { ILogicRule, IRule, IRuleFieldMap, ShieldRule } from './types';
  *
  */
 export function isRule<TContext extends Record<string, any>>(x: any): x is IRule<TContext> {
-  return x instanceof Rule || (x?.constructor && x.constructor.name === 'Rule');
+  return x instanceof Rule || x?.constructor?.name === 'Rule';
 }
 
 /**

@@ -1,4 +1,5 @@
 import { IOptions, IRules, ShieldRule } from './types';
+import { isLogicRule, isRuleFunction } from './utils';
 
 /**
  *
@@ -24,8 +25,17 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
     const rawInput = getRawInput();
     const opWithPath: Array<string> = path.split('.');
     const opName: string = opWithPath[opWithPath.length - 1];
-    const keys = Object.keys(ruleTree);
     let rule: ShieldRule<TContext> | undefined;
+
+    // `IRules` is `ShieldRule | IRuleTypeMap`, so the whole tree may be a single rule meant to guard
+    // every procedure. Enumerating its keys finds no operation type, so without this it resolved
+    // nothing and fell through to the default `allow`.
+    if (isRuleFunction(ruleTree) || isLogicRule(ruleTree)) {
+      rule = ruleTree as ShieldRule<TContext>;
+      return applyRule(rule);
+    }
+
+    const keys = Object.keys(ruleTree);
     // Every operation type must be listed. Omitting 'subscription' meant a tree holding only
     // subscription rules took the namespaced branch, matched nothing, and fell through to the
     // default `allow`, leaving the subscription unprotected.
@@ -41,14 +51,16 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
       }
     }
     rule = rule || options.fallbackRule;
+    return applyRule(rule);
 
-    if (rule) {
-      return rule?.resolve(ctx, type, path, input, rawInput, options).then((result) => {
+    function applyRule(resolved: ShieldRule<TContext> | undefined) {
+      if (!resolved) return next();
+
+      return resolved.resolve(ctx, type, path, input, rawInput, options).then((result) => {
         if (result instanceof Error) throw result;
 
         // Handle context extension
         if (typeof result === 'object' && result !== null && 'ctx' in result) {
-          // Merge context extension and call next with updated context
           const extendedCtx = { ...ctx, ...result.ctx };
           return next({ ctx: extendedCtx });
         }
@@ -57,6 +69,5 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
         return next();
       });
     }
-    return next();
   };
 }

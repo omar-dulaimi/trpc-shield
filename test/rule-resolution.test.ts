@@ -47,6 +47,19 @@ describe('rules resolve for every operation type', () => {
     );
   });
 
+  /**
+   * `IRules` is `ShieldRule | IRuleTypeMap`, so a bare rule as the whole tree type-checks and passes
+   * validation. It used to resolve nothing and fall through to `allow`, meaning the one shape that
+   * looks like "guard everything" guarded nothing.
+   */
+  it('applies a bare rule given as the entire tree', async () => {
+    await expect(callWith(deny, 'query', 'anything')).resolves.toBe('denied');
+  });
+
+  it('applies a bare rule to a mutation too', async () => {
+    await expect(callWith(deny, 'mutation', 'somewhere.deep')).resolves.toBe('denied');
+  });
+
   it('still resolves namespaced trees, which have no operation key at the top', async () => {
     await expect(callWith({ admin: { query: { list: deny } } }, 'query', 'admin.list')).resolves.toBe('denied');
   });

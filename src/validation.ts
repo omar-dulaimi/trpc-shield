@@ -10,9 +10,50 @@ import { flattenObjectOf, isLogicRule, isRuleFunction } from './utils';
  * to different rules.
  *
  */
+const OPERATION_TYPES = ['query', 'mutation', 'subscription'];
+
+/**
+ * Checks that rules sit where the middleware looks for them.
+ *
+ * A rule resolves either as `tree[operation][name]` or as `tree[namespace][operation][name]`, so at
+ * the top level a key is an operation type, or a namespace whose value holds one. A rule placed
+ * anywhere else is never found, and the procedure falls through to the default `allow` and runs
+ * unguarded. Nothing used to say so.
+ */
+function findMisplacedRules<TContext extends Record<string, any>>(ruleTree: IRules<TContext>): string[] {
+  // A bare rule as the whole tree applies to everything; there are no keys to misplace.
+  if (isRuleFunction(ruleTree) || isLogicRule(ruleTree)) return [];
+
+  return Object.entries(ruleTree as Record<string, unknown>)
+    .filter(([key]) => !OPERATION_TYPES.includes(key))
+    .filter(([, branch]) => {
+      // A rule directly under a name that is not an operation type.
+      if (isRuleFunction(branch) || isLogicRule(branch)) return true;
+      // A namespace is only meaningful if it declares an operation type inside it.
+      if (branch !== null && typeof branch === 'object') {
+        return !Object.keys(branch as object).some((k) => OPERATION_TYPES.includes(k));
+      }
+      return false;
+    })
+    .map(([key]) => key);
+}
+
 export function validateRuleTree<TContext extends Record<string, any>>(
   ruleTree: IRules<TContext>,
 ): { status: 'ok' } | { status: 'err'; message: string } {
+  const misplaced = findMisplacedRules(ruleTree);
+  if (misplaced.length > 0) {
+    return {
+      status: 'err',
+      message:
+        `These rule tree keys are in a position where no rule can be found, so the procedures they ` +
+        `were meant to guard would run unprotected: ${misplaced.join(', ')}. ` +
+        `Rules belong under an operation type, as in { query: { myProcedure: myRule } }, or under a ` +
+        `router namespace that contains one, as in { myRouter: { mutation: { myProcedure: myRule } } }. ` +
+        `Valid operation types are query, mutation and subscription.`,
+    };
+  }
+
   const rules = extractRules(ruleTree);
 
   const valid = rules.reduce<{ map: Map<string, IRule<TContext>>; duplicates: string[] }>(

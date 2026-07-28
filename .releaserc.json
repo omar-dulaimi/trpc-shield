@@ -59,38 +59,38 @@
           "types": [
             {
               "type": "feat",
-              "section": "🚀 Features"
+              "section": "\ud83d\ude80 Features"
             },
             {
               "type": "fix",
-              "section": "🐛 Bug Fixes"
+              "section": "\ud83d\udc1b Bug Fixes"
             },
             {
               "type": "perf",
-              "section": "⚡ Performance Improvements"
+              "section": "\u26a1 Performance Improvements"
             },
             {
               "type": "refactor",
-              "section": "♻️ Code Refactoring"
+              "section": "\u267b\ufe0f Code Refactoring"
             },
             {
               "type": "docs",
-              "section": "📚 Documentation",
+              "section": "\ud83d\udcda Documentation",
               "hidden": false
             },
             {
               "type": "style",
-              "section": "💎 Styles",
+              "section": "\ud83d\udc8e Styles",
               "hidden": true
             },
             {
               "type": "test",
-              "section": "🧪 Tests",
+              "section": "\ud83e\uddea Tests",
               "hidden": true
             },
             {
               "type": "chore",
-              "section": "🔧 Miscellaneous Chores",
+              "section": "\ud83d\udd27 Miscellaneous Chores",
               "hidden": true
             }
           ]
@@ -127,8 +127,12 @@
             "path": "dist.zip",
             "label": "Distribution files"
           }
-        ]
+        ],
+        "failComment": false,
+        "failTitle": false
       }
     ]
-  ]
+  ],
+  "//": "repositoryUrl is set explicitly: package.json uses npm's `git+https://` form, which @semantic-release/github parses into an empty $owner. Its `fail` step then dies on a GraphQL error that masks whatever actually went wrong.",
+  "repositoryUrl": "https://github.com/omar-dulaimi/trpc-shield.git"
 }

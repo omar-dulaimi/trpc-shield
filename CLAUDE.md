@@ -10,17 +10,31 @@ This is **trpc-shield**, a TypeScript library that provides a permission layer f
 
 ## Build and Development Commands
 
-- `pnpm build` - Compile TypeScript to JavaScript (outputs to `lib/`)
-- `pnpm prebuild` - Clean the lib folder before building
+- `pnpm build` - Compile TypeScript twice: CommonJS to `lib/`, ES modules to `lib/esm/`
+- `pnpm prebuild` - Clean `lib/` and the `.tsbuildinfo` files before building
 - `pnpm release` - Build and publish the package (runs `./package.sh` then publishes from `package/` dir)
 - `pnpm prettier` - Format code using Prettier
+
+### Module format
+
+The package is dual-published and the `exports` map in `package.json` is the source of truth: `require()` gets the CommonJS build in `lib/`, `import` gets the ES modules in `lib/esm/`, which `scripts/build-esm-marker.mjs` marks with a nested `{"type":"module"}` package.json. `main`, `module` and `types` are kept accurate alongside it, because `moduleResolution: node10` consumers ignore the map entirely.
+
+Two rules follow from this:
+
+- **Relative imports in `src/` must carry an explicit `.js` extension.** TypeScript emits specifiers verbatim and Node's ESM resolver does not guess extensions, so an extensionless import compiles cleanly and then fails to load for every ESM consumer.
+- **The root `package.json` must not declare `"type": "module"`.** It would make Node read the CommonJS build in `lib/` as ESM. That is what made 2.0.0 and 2.0.1 impossible to load at all.
+
+Do not add `incremental` to the build tsconfigs unless the `.tsbuildinfo` file lands inside a directory `prebuild` cleans. TypeScript 5.9 writes it next to `tsconfig.json` rather than into `outDir`, and it does not check whether the outputs still exist, so a stale one makes `tsc` skip emit and exit 0 with no `lib/` at all. Every 1.x release shipped that way, with no build output in the tarball.
 
 ## Testing
 
 - `pnpm test` - Run all tests with Vitest
+- `pnpm test:package` - Pack the tarball, install it into an empty directory, then `require()` it, `import` it and type-check against it
 - `pnpm test:watch` - Run tests in watch mode
 - `pnpm test:coverage` - Run tests with coverage report
 - `pnpm test:ui` - Run tests with Vitest UI
+
+The Vitest suites import from `../src`, so they pass no matter what the build emits or the tarball contains. Every packaging defect this project has shipped lived in that gap. `pnpm test:package` is the only check that loads what a consumer installs; run it after touching `package.json`, either tsconfig, or anything under `scripts/`.
 
 The project has comprehensive test coverage (>94%) including:
 - Unit tests for all rule types and logic operations
@@ -103,7 +117,7 @@ shield({
 ## Development Notes
 
 - The project uses TypeScript with strict mode enabled
-- No tests are currently defined in package.json
 - Example implementation available in `example/` directory with Prisma integration
 - Built files are excluded from Git (in `lib/`)
-- Package publication uses a custom script that operates from a `package/` subdirectory
+- The tarball is defined by the `files` field, which ships `lib/` and nothing else. There is no `.npmignore`, and without `files` npm shipped `src/`, `test/` and `example/` too
+- Releases are published by semantic-release from the repository root, not by `package.sh`

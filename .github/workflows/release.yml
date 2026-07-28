@@ -44,10 +44,18 @@ jobs:
         pnpm typecheck
         pnpm lint
         pnpm test:coverage
-        
+
+    # The unit tests import from src/, so they pass regardless of what the tarball contains. Every
+    # release from 1.0.0 to 2.0.1 was unloadable and this gate is what would have caught it, so it
+    # runs before anything is published rather than after.
+    - name: Test the published package
+      run: pnpm test:package
+
+    # Named lib.zip to match the asset path in .releaserc.json. The build writes to lib/, so the
+    # previous dist.zip reference attached nothing to the GitHub release.
     - name: Create distribution zip
       run: zip -r lib.zip lib/
-        
+
     - name: Semantic Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

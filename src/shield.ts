@@ -1,9 +1,9 @@
 import type { TRPCMiddlewareFunction } from '@trpc/server';
-import { allow } from './constructors';
-import { generateMiddlewareFromRuleTree } from './generator';
-import type { IFallbackErrorType, IOptions, IOptionsConstructor, IRules, ShieldRule } from './types';
-import { withDefault } from './utils';
-import { ValidationError, validateRuleTree } from './validation';
+import { allow } from './constructors.js';
+import { generateMiddlewareFromRuleTree } from './generator.js';
+import type { IFallbackErrorType, IOptions, IOptionsConstructor, IRules, ShieldRule } from './types.js';
+import { withDefault } from './utils.js';
+import { ValidationError, validateRuleTree } from './validation.js';
 
 /**
  *

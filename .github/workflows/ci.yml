@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [22.x, 24.x]
@@ -58,6 +58,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
 
+    strategy:
+      matrix:
+        # The unit tests import from src/, so they cannot see the published package at all. This job
+        # is the only thing that loads what consumers install, and require()/import semantics differ
+        # between Node majors, so it runs on both supported ones.
+        node-version: [22.x, 24.x]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,28 +72,34 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build and package
-        run: |
-          pnpm build
+      # Packs the tarball, installs it into an empty directory, then requires it, imports it and
+      # type-checks against it. `pnpm pack` alone only proves a tarball can be produced, not that
+      # anything in it loads.
+      - name: Test the published package
+        run: pnpm test:package
+        timeout-minutes: 10
 
-      - name: Test package integrity
-        run: |
-          pnpm pack
-          
+      - name: Pack the tarball for inspection
+        run: pnpm pack
+
       - name: Upload build artifact
+        if: matrix.node-version == '24.x'
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
+          # The build writes to lib/ (tsconfig outDir, and prebuild is `rimraf lib`). This said
+          # dist/, which does not exist, so the upload was empty.
           path: |
-            dist/
+            lib/
+            *.tgz
             package.json
           retention-days: 7

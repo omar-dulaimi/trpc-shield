@@ -1,5 +1,5 @@
-import { IOptions, IRules, ShieldRule } from './types';
-import { isLogicRule, isRuleFunction } from './utils';
+import { IOptions, IRules, ShieldRule } from './types.js';
+import { isLogicRule, isRuleFunction } from './utils.js';
 
 /**
  *

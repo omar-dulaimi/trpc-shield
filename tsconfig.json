@@ -1,18 +1,25 @@
 {
   "compilerOptions": {
-    "incremental": true,
     "outDir": "./lib",
     "rootDir": "./src",
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "importHelpers": true,
+    // tslib is not a dependency of this package, so emitting `require('tslib')` into lib/ would
+    // fail at a consumer's runtime the first time any helper was needed. Inline the helpers instead.
+    "importHelpers": false,
     "experimentalDecorators": true,
+    // CommonJS is the `require` half of the published package. The ESM half is built separately by
+    // tsconfig.esm.json; see the `exports` map in package.json.
     "module": "commonjs",
+    "moduleResolution": "node10",
     "target": "es2019",
     "lib": ["es2019", "DOM"],
     "emitDecoratorMetadata": true,
     "sourceMap": true,
+    // The tarball ships `lib/` but not `src/`, so a map pointing at ../src/*.ts would resolve to
+    // nothing in a consumer's debugger. Inlining the sources keeps them usable.
+    "inlineSources": true,
     "declaration": true,
     "noImplicitThis": true,
     "strict": true,

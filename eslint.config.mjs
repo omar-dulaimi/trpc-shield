@@ -10,6 +10,7 @@ export default [
       'lib/**',
       'coverage/**',
       '*.config.js',
+      '*.config.mjs',
       '*.config.ts',
       'example/**',
       'package/**',

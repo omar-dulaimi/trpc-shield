@@ -124,7 +124,7 @@
       {
         "assets": [
           {
-            "path": "dist.zip",
+            "path": "lib.zip",
             "label": "Distribution files"
           }
         ],

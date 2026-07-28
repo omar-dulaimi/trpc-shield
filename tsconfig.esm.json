@@ -1,0 +1,16 @@
+{
+  // The `import` half of the published package. Emits real ES modules to lib/esm/, which
+  // scripts/build-esm-marker.mjs then marks with a {"type":"module"} package.json so Node reads the
+  // .js files there as ESM while the CommonJS build in lib/ stays CommonJS.
+  //
+  // Relative imports in src/ carry explicit .js extensions because TypeScript emits specifiers
+  // verbatim, and Node's ESM resolver does not guess extensions.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./lib/esm",
+    "module": "es2020",
+    "moduleResolution": "bundler"
+  },
+  "include": ["src"],
+  "exclude": ["lib"]
+}

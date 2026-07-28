@@ -71,6 +71,20 @@ npm install trpc-shield
 yarn add trpc-shield
 ```
 
+The package ships both module formats, so it works either way:
+
+```js
+import { shield, rule } from 'trpc-shield'; // ES modules
+const { shield, rule } = require('trpc-shield'); // CommonJS
+```
+
+Both are named exports; there is no default export. Types are published for both, so `require` and
+`import` resolve correctly under `moduleResolution` `node10`, `node16` and `bundler`.
+
+> **Upgrading from 1.x or 2.0.x?** Those releases could not be loaded at all: 1.x shipped without any
+> build output, and 2.0.0 and 2.0.1 declared `"type": "module"` over a CommonJS build. Upgrade to the
+> latest 2.x; no code changes are needed.
+
 ### Basic Example
 
 ```typescript

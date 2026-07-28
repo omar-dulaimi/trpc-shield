@@ -1,11 +1,27 @@
 {
   "name": "trpc-shield",
   "version": "2.0.1",
-  "type": "module",
   "description": "tRPC permissions as another layer of abstraction!",
   "repository": "https://github.com/omar-dulaimi/trpc-shield",
   "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "module": "lib/esm/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/index.d.ts",
+        "default": "./lib/esm/index.js"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib"
+  ],
   "author": {
     "name": "Omar Dulaimi",
     "url": "https://github.com/omar-dulaimi"
@@ -16,8 +32,8 @@
   ],
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf lib",
-    "build": "tsc",
+    "prebuild": "rimraf lib tsconfig.tsbuildinfo tsconfig.esm.tsbuildinfo",
+    "build": "tsc --project tsconfig.json && tsc --project tsconfig.esm.json && node scripts/build-esm-marker.mjs",
     "prerelease": "pnpm build",
     "release": "./package.sh && cd package && pnpm publish",
     "semantic-release": "semantic-release",
@@ -26,6 +42,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:package": "node scripts/check-package.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",

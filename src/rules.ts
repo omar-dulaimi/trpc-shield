@@ -1,4 +1,4 @@
-import { ILogicRule, IOptions, IRule, IRuleConstructorOptions, IRuleFunction, IRuleResult, ShieldRule } from './types';
+import { ILogicRule, IOptions, IRule, IRuleConstructorOptions, IRuleFunction, IRuleResult, ShieldRule } from './types.js';
 
 export class Rule<TContext extends Record<string, any>> implements IRule<TContext> {
   readonly name: string;

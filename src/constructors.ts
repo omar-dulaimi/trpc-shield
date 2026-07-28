@@ -1,5 +1,5 @@
-import { Rule, RuleAnd, RuleChain, RuleFalse, RuleNot, RuleOr, RuleRace, RuleTrue } from './rules';
-import { IRuleConstructorOptions, IRuleFunction, ShieldRule } from './types';
+import { Rule, RuleAnd, RuleChain, RuleFalse, RuleNot, RuleOr, RuleRace, RuleTrue } from './rules.js';
+import { IRuleConstructorOptions, IRuleFunction, ShieldRule } from './types.js';
 
 /**
  *

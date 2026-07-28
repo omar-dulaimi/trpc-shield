@@ -128,16 +128,26 @@ const protectedProcedure = t.procedure.use(middleware);
 
 | tRPC Version | Shield Version | Status |
 |--------------|----------------|---------|
-| **v11.x** | **v1.0.0+** | ✅ **Recommended** |
+| **v11.x** | **v3.0.0+** | ✅ **Recommended** |
+| v11.x | v1.0.0 - v2.0.1 | ❌ Do not use, see below |
 | v10.x | v0.2.0 - v0.4.x | ⚠️ Legacy |
 | v9.x | v0.1.2 and below | ❌ Deprecated |
 
-### 🆕 What's New in Latest Version
+> **Upgrade from 1.x or 2.x.** Every version from 1.0.0 through 2.0.1 was unloadable: the package
+> declared `"type": "module"` over a CommonJS build, so both `require()` and `import` threw. 3.0.0
+> ships a dual CommonJS and ESM build behind an `exports` map and is the first release in that line
+> that loads at all.
 
-- **tRPC v11 Support** - Full compatibility with latest tRPC features
-- **Context Extension** - Rules can now extend context (see [Context Extension](#-context-extension))
-- **Improved TypeScript** - Better type inference and safety
-- **Performance Optimizations** - Faster rule evaluation
+### 🆕 What's New in 3.0.0
+
+- **The package loads.** Fixes the `"type": "module"` mismatch that broke every 1.x and 2.x release.
+- **Deeply nested routers** now resolve correctly, so `admin.user.findMany` and `admin.post.findMany`
+  no longer collapse onto one rule. Thanks to [@zitrusgelb](https://github.com/zitrusgelb) for the fix.
+- **Three ways a rule could be silently ignored are gone**, each of which failed open: subscription
+  rules resolved nothing, `shield(myRule)` with a bare rule resolved nothing despite the type
+  signature allowing it, and a malformed tree fell through to `allow`.
+- **Breaking:** a rule tree whose keys cannot resolve now throws at startup instead of being ignored.
+  If that stops your application, those procedures were running unprotected.
 - **Enhanced Testing** - Comprehensive test coverage
 
 ## 🔧 Core Concepts

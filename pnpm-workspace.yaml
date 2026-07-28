@@ -1,11 +1,8 @@
 packages:
   - .
   - example
-
-onlyBuiltDependencies:
-  - esbuild
-  - '@prisma/client'
-  - '@prisma/engines'
-  - better-sqlite3
-  - prisma
-  - prisma-zod-generator
+allowBuilds:
+  '@prisma/engines': true
+  better-sqlite3: true
+  esbuild: true
+  prisma: true

@@ -20,21 +20,29 @@ const OPERATION_TYPES = ['query', 'mutation', 'subscription'];
  * anywhere else is never found, and the procedure falls through to the default `allow` and runs
  * unguarded. Nothing used to say so.
  */
+/**
+ * Whether a branch leads to an operation type, and so to a rule the middleware can find.
+ *
+ * Namespaces nest to any depth, matching a router tree like `admin.user.findMany`, so this recurses
+ * rather than looking one level down. A rule is not a namespace: reaching one means the tree put a
+ * rule where a router name belongs.
+ */
+function leadsToAnOperation(branch: unknown): boolean {
+  if (isRuleFunction(branch) || isLogicRule(branch)) return false;
+  if (branch === null || typeof branch !== 'object') return false;
+
+  const keys = Object.keys(branch as object);
+  if (keys.some((key) => OPERATION_TYPES.includes(key))) return true;
+  return keys.some((key) => leadsToAnOperation((branch as Record<string, unknown>)[key]));
+}
+
 function findMisplacedRules<TContext extends Record<string, any>>(ruleTree: IRules<TContext>): string[] {
   // A bare rule as the whole tree applies to everything; there are no keys to misplace.
   if (isRuleFunction(ruleTree) || isLogicRule(ruleTree)) return [];
 
   return Object.entries(ruleTree as Record<string, unknown>)
     .filter(([key]) => !OPERATION_TYPES.includes(key))
-    .filter(([, branch]) => {
-      // A rule directly under a name that is not an operation type.
-      if (isRuleFunction(branch) || isLogicRule(branch)) return true;
-      // A namespace is only meaningful if it declares an operation type inside it.
-      if (branch !== null && typeof branch === 'object') {
-        return !Object.keys(branch as object).some((k) => OPERATION_TYPES.includes(k));
-      }
-      return false;
-    })
+    .filter(([, branch]) => !leadsToAnOperation(branch))
     .map(([key]) => key);
 }
 

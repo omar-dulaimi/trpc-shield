@@ -45,9 +45,13 @@ export function generateMiddlewareFromRuleTree<TContext extends Record<string, u
     } else {
       const namespace = opWithPath[0];
 
-      const tree = (ruleTree as Record<string, any>)[namespace];
+      let tree = (ruleTree as Record<string, any>)[namespace];
+      for (let i = 1; i < opWithPath.length - 1; i++) {
+        tree = tree?.[opWithPath[i]];
+        if (!tree) break;
+      }
       if (tree?.[type]?.[opName]) {
-        rule = tree?.[type]?.[opName];
+        rule = tree[type][opName];
       }
     }
     rule = rule || options.fallbackRule;

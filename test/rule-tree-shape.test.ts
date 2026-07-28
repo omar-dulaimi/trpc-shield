@@ -52,6 +52,20 @@ describe('valid shapes still build', () => {
     expect(() => shield<Ctx>({ subscription: { onTick: isAdmin } } as any)).not.toThrow();
   });
 
+  /**
+   * Namespaces nest as deeply as the router does. An earlier version of the shape check only looked
+   * one level down, so it rejected a tree matching `admin.user.findMany`, which resolves correctly.
+   */
+  it('accepts a deeply nested namespace', () => {
+    expect(() =>
+      shield<Ctx>({ admin: { user: { query: { findMany: isAdmin } } } } as any),
+    ).not.toThrow();
+  });
+
+  it('still rejects a rule buried in a namespace with no operation type', () => {
+    expect(() => shield<Ctx>({ admin: { user: isAdmin } } as any)).toThrow(/admin/);
+  });
+
   it('accepts an empty tree', () => {
     expect(() => shield<Ctx>({})).not.toThrow();
   });

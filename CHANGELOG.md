@@ -1,3 +1,5 @@
+## [3.0.0](https://github.com/omar-dulaimi/trpc-shield/compare/v2.0.1...v3.0.0) (2026-07-28)
+
 ## [2.0.1](https://github.com/omar-dulaimi/trpc-shield/compare/v2.0.0...v2.0.1) (2025-11-22)
 
 ### 🐛 Bug Fixes

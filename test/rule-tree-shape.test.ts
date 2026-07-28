@@ -57,9 +57,7 @@ describe('valid shapes still build', () => {
    * one level down, so it rejected a tree matching `admin.user.findMany`, which resolves correctly.
    */
   it('accepts a deeply nested namespace', () => {
-    expect(() =>
-      shield<Ctx>({ admin: { user: { query: { findMany: isAdmin } } } } as any),
-    ).not.toThrow();
+    expect(() => shield<Ctx>({ admin: { user: { query: { findMany: isAdmin } } } } as any)).not.toThrow();
   });
 
   it('still rejects a rule buried in a namespace with no operation type', () => {

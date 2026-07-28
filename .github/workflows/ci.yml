@@ -38,14 +38,13 @@ jobs:
 
       - name: Run linting
         run: pnpm lint
-        continue-on-error: true
 
       - name: Run tests
         run: pnpm test:coverage
         timeout-minutes: 10
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == '20.x'
+        if: matrix.node-version == '24.x'
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage/coverage-final.json
@@ -69,7 +68,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'pnpm'
 
       - name: Install dependencies
